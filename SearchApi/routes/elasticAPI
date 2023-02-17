@@ -10,7 +10,7 @@ const { Client } = require('@elastic/elasticsearch')
         auth: { apiKey: process.env.apiKey }
       })
 
-async function run (req,res,next) {
+async function run1 (req,res,next) {
 
   console.log(process.env.apiKey);
     //Let's search!
@@ -40,12 +40,37 @@ async function run (req,res,next) {
     }
 
  }
+ async function run2 (req,res,next) {
 
-router.post('/searchResult',run,(req, res) =>{
+  console.log(process.env.apiKey);
+    //Let's search!
+    try {
+         // here we are forcing an index refresh, otherwise we will not
+    // get any result in the consequent search
+        await client.indices.refresh({ index: 'search-store-details' })
+        const result = await client.search({
+          index: 'search-store-details',
+          body: {
+              query: {
+                  match_all: {}
+              }
+          }
+      });
+        res.send(result.hits.hits);
+        next();
+      
+    } catch (error) {
+        res.send(error);    
+        next();
+    }
+
+ }
+
+router.post('/searchResult',run1,(req, res) =>{
   console.log("response sent")
   
 });
-router.get('/',run,(req,res)=>{
+router.get('/getAll',run2,(req,res)=>{
     console.log("hello");
     
 })

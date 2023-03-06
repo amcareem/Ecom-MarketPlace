@@ -6,13 +6,85 @@ const { Client } = require('@elastic/elasticsearch')
 
     //connect to client api
     const client = new Client({
-        cloud: { id: 'searchService-ES:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDBiZjUxMTk3YWQxMTRkNmQ4MDBlZWFkZTg5NjFkMjQ5JGZjMzM4ZDA3ZGNhMzRiOGZhNDY0ZTQ5YmUyYTIwZGQz' },
-        auth: { apiKey: process.env.apiKey }
+        cloud: { id: '14633ba15cc240c7b994d8756b97b089:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDZiNjZmYjljY2YyMzRjYjg5OGUwMWYxYWFkODUxMzUzJGMxZDcyODdkMjQyMDRhMDA4MjBhMGU3MWNiZDI3Yzlk' },
+        auth: { apiKey:  'TkVvdm80WUJ1VXBNUnpSWWlwd0c6dDRldm93WWhRaEtsNl90RWgtbkxpZw=='}
       })
 
+//       async function run () {
+//         // 
+        
+//         await client.index({
+//           index: 'search-store-details',
+//           document: {
+//             storeName : 'Swaruper Enterprice',
+//             type : 'HardWare',
+//             Time : '10:00 Am - 8:00 Pm '
+//           }
+//         })
+        
+//         await client.index({
+//           index: 'search-store-details',
+//           document: {
+//             storeName : 'Swarup Sports',
+//             type : 'Sports Good',
+//             Time : '9:00 Am - 8:00 Pm '
+//           }
+//         })
+      
+//         await client.index({
+//           index: 'search-store-details',
+//           document: {
+//             storeName : 'Munna General Store',
+//             type : 'Grocery',
+//             Time : '10:00 Am - 8:00 Pm '
+//           }
+//         })
+        
+//         await client.index({
+//           index: 'search-store-details',
+//           document: {
+//             storeName : 'Kokonod Vege Shop',
+//             type : 'WholeSale Veg',
+//             Time : '6:00 Am - 12:00 Pm '
+//           }
+//         })
+      
+//         await client.index({
+//           index: 'search-store-details',
+//           document: {
+//             storeName : 'Souvik Biriyani',
+//             type : 'Food',
+//             Time : '5:00 pm - 11:00 Pm '
+//           }
+//         })
+//          await client.index({
+//           index: 'search-store-details',
+//           document: {
+//             storeName : 'Swarup Biriyani',
+//             type : 'Food',
+//             Time : '5:00 pm - 11:00 Pm '
+//           }
+//         })
+
+//     await client.indices.refresh({ index: 'search-store-details' })
+
+//     // Let's search!
+//     const result= await client.search({
+//       index: 'search-store-details',
+//       query: {
+//         match_phrase_prefix: {
+//             storeName: 'Swarup Biriyani'
+//         }
+//       }
+//     })
+  
+//     console.log(result.hits.hits)
+//   }
+  
+//   run().catch(console.log)
 async function run1 (req,res,next) {
 
-  console.log(process.env.apiKey);
+  console.log('KJRiPJjvSs2OyxjK2LsBRw');
     //Let's search!
     try {
          // here we are forcing an index refresh, otherwise we will not
@@ -42,7 +114,7 @@ async function run1 (req,res,next) {
  }
  async function run2 (req,res,next) {
 
-  console.log(process.env.apiKey);
+  console.log('KJRiPJjvSs2OyxjK2LsBRw');
     //Let's search!
     try {
          // here we are forcing an index refresh, otherwise we will not
@@ -74,4 +146,5 @@ router.get('/getAll',run2,(req,res)=>{
     console.log("hello");
     
 })
+
 module.exports = router;

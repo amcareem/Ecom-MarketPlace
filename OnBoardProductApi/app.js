@@ -4,13 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
 var onboardRouter = require('./routes/onBoard');
+const { model } = require('mongoose');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+
 
 app.use(logger('dev'));
 app.use(express.json());

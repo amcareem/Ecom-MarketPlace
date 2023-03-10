@@ -1,20 +1,29 @@
 var mongoose =  require('mongoose');
 
-mongoose.Schema({
-    prodctName:{
+var productSchema = mongoose.Schema({
+    shopId:{
+        type:String,
+        require : true
+    },
+    shopName:{
+        type: String,
+        required : true
+    },
+    productName:{
         type: String,
         required : true
     },
     productImage:{
-        type:String
+        data:Buffer,
+        contentType:String
     },
-    prodctDescription:{
+    productDescription:{
         type:String
     },
     productAmount:{
         weight:{
-            type:Number //in grams
-
+            type:Number, //in KG
+            default :-1
         },
         amount:{
             type:Number, //or in piece
@@ -24,3 +33,5 @@ mongoose.Schema({
     
 
 })
+var productModel =  mongoose.model('productModel',productSchema);
+module.exports = productModel;

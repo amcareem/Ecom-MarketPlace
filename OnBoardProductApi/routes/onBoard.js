@@ -2,7 +2,8 @@ require('dotenv').config();
 var express =   require('express');
 var mongoose =  require('mongoose');
 var router =  express.Router();
-var multer =require('multer');
+var multer = require('multer');
+var path =  require('path');
 
 const productModel =  require('../model/product');
 
@@ -64,7 +65,8 @@ router.get('/getProduct/:shopId',async (req,res)=>{   // get data from shopId
       const items = {
         productName : element.productName,
         productDescription : element.productDescription,
-        productImagePath : "\\OnboardProductApi\\productImages\\" + element.productImage.data.toString()
+        
+        productImagePath : path.join('..','OnboardProductApi', 'productImages', element.productImage.data.toString())
       };
       productArray.push(items);
     });
@@ -78,6 +80,7 @@ router.get('/getProduct/:shopId',async (req,res)=>{   // get data from shopId
   }
   
 })
+
 router.get('/',(req,res)=>{
   res.send("API is working");
 })

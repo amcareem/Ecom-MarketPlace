@@ -37,9 +37,9 @@ router.post('/addToCart',(req,res)=>{
 });
 
 //get cart details
-router.get('/getCartDetails',(req,res)=>{
-   // var uuid =  req.params.id;
-    db.query('select * from cart',(err,result)=>{
+router.get('/getCartDetails/:id',(req,res)=>{
+    var uuid =  req.params.id;
+    db.query('select * from cart where uuid ='+uuid,(err,result)=>{
             if(err)
                 res.send(err)
             else{

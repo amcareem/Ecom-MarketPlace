@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import { FaTimes,FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useGlobalContext } from "./context";
 function Navbar() {
 	const[isMobile,setIsMobile] = useState(false);
+	const {userName,loginStatus} = useGlobalContext();
 	isMobile ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
 	return (
 		<header className="main-nav">
@@ -13,9 +15,10 @@ function Navbar() {
 				<ul>
 				<li><Link to='/' className="home">Home</Link></li>
 				<li><Link href="/#" className="orders">Orders</Link></li>
-				<li><Link to ='/Login' className="login">Login</Link></li>
+				{/* <li><Link to ='/Login' className="login">Login</Link></li> */}
 				<li><Link href="/#" className="orders">Orders</Link></li>
-				<li><Link to ='/Login' className="login">Login</Link></li>
+				<li><Link to ='/Login' className="login">
+				{(!loginStatus) ? "Login" : userName }</Link></li>
 				</ul>
 				
 			</nav>

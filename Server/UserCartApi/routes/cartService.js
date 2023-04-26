@@ -24,9 +24,9 @@ db.connect((err)=>{
 
 //store item in a cart
 router.post('/addToCart',(req,res)=>{
-    const {productId,uuid,productName,productPrice,productAmount} = req.body;
-    console.log('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+')');
-    db.query('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+')',(err,result)=>{
+    const {productId,uuid,productName,productPrice,productAmount,shopId} = req.body;
+    console.log('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount,shopId) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+shopId+')');
+    db.query('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+shopId+')',(err,result)=>{
         if(err)
             res.send(err);
         else{
@@ -41,7 +41,8 @@ router.get('/getCartDetails/:id',(req,res)=>{
     var uuid =  req.params.id;
     db.query('select * from cart where uuid ='+uuid,(err,result)=>{
             if(err)
-                res.send(err)
+                res.send(err)   
+
             else{
                 console.log("working");
                 res.send(result);

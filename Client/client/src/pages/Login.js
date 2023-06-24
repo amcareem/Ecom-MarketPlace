@@ -6,7 +6,7 @@ import { useGlobalContext } from '../components/context';
 
 const Login = () => {
   const navigate = useNavigate();
-  const{setLoginStatus,userName,setUserName} = useGlobalContext();
+  const{setLoginStatus,setUserInfo} = useGlobalContext();
   const[user,setUser] = useState(
     {
       email:"",
@@ -26,8 +26,16 @@ const Login = () => {
       .post('http://localhost:9000/auth/login', user)
       .then((response) => {
         console.log(response.data);
-        setUserName(response.data.user.user_name);
-        setLoginStatus(true);
+        setUserInfo({
+          userId : response.data.user.user_id,
+          userName : response.data.user.user_name,
+          email : response.data.user.email,
+          accessToken : response.data.token
+
+        })
+        window.localStorage.setItem("token",response.data.token);
+        window.localStorage.setItem("loginStatus",true);
+        window.localStorage.setItem("userInfo",response.data.user);
         navigate("/");
       })
       .catch((err) => console.log(err));

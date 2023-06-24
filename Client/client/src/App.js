@@ -9,19 +9,23 @@ import Layout from './components/Layout';
 import ForgotPassword from './pages/ForgotPassword';
 import Signup from './pages/Signup';
 import ShopProductPage from './pages/ShopProductPage';
+import UserCart from './pages/UserCart';
 // getAll();
 function App() {
+  
   return (
     <>
     <BrowserRouter>
         <Routes>
           <Route path = '/' element = {<Layout/>}>
             <Route path= '/' index element = {<Home/>} />
-            <Route path = '/Login' element = {<Login/>} />
+            
             <Route path ="/ForgotPassword" element={<ForgotPassword />} />
             <Route path ="/Signup" element={<Signup />}/>
             <Route path ="/ShopProductPage/:shopId" element={<ShopProductPage/>}/>
+            <Route path='/UserCart' element={<UserCart/>}/>
           </Route>
+          <Route path = '/Login' element = {<Login/>} />
         </Routes>
       </BrowserRouter>
     </>

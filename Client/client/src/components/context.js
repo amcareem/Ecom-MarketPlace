@@ -9,8 +9,14 @@ const AppProvider = ({children}) => {
     const[searchQuery,setSearchQuery] = useState("");
     const[shopIdForProducts,setShopIdForProducts] = useState("");
     const[productList,setProductList] = useState([]);
-    const[userName,setUserName] = useState("");
     const[loginStatus,setLoginStatus] = useState(false);
+    const[userInfo,setUserInfo] = useState({
+      userName : "",
+      userId : "",
+      accessToken: "",
+      email: ""
+    })
+    const[cartProducts,setCartProducts] = useState([]);
     // const getAll = async() => {
     //     try {
     //       // Handle successful response from backend
@@ -45,7 +51,7 @@ const AppProvider = ({children}) => {
       //   }
       //   getAll();
       // },[]);
-    return <AppContext.Provider value={ {storeList,setStoreList,productList,setProductList,userName,setUserName,loginStatus,setLoginStatus}}>{children}</AppContext.Provider>  
+    return <AppContext.Provider value={ {storeList,setStoreList,productList,setProductList,userInfo,setUserInfo,loginStatus,setLoginStatus,cartProducts,setCartProducts}}>{children}</AppContext.Provider>  
 }
 
 const useGlobalContext = () => {

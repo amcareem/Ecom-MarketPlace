@@ -5,15 +5,16 @@ var router =  express.Router();
 var multer = require('multer');
 var path =  require('path');
 
+
 const productModel =  require('../model/product');
 
 
-mongoose.connect(process.env.mongoUri,{useNewUrlParser :  true},mongoose.set('strictQuery',true)).then(()=>{
+mongoose.connect(process.env.MONGO_URL,{useNewUrlParser :  true},mongoose.set('strictQuery',true)).then(()=>{
     console.log("connected");}).catch((err)=>{console.log(err);})
 
 //Image File Storage 
 const Storage =  multer.diskStorage({
-    destination:'productImages', // productImages file is created
+    destination:'public/assets', // productImages file is created
     filename:(req,file,cb)=>{
       cb(null,  Date.now() + file.originalname ); //stored in binary format
     },
@@ -41,7 +42,8 @@ router.post('/storeProduct',(req,res)=>{ //store data in the database
         productImage: {
           data: req.file.filename,
           contentType: 'image/jpeg'
-        }
+        },
+        productPrice:req.body.productPrice
       });
       try {
         newProduct.save().then(()=>{
@@ -63,10 +65,12 @@ router.get('/getProduct/:shopId',async (req,res)=>{   // get data from shopId
     var productArray = [];
     result.forEach(element => {
       const items = {
+        productId : element._id,
         productName : element.productName,
         productDescription : element.productDescription,
-        
-        productImagePath : path.join('..','OnboardProductApi', 'productImages', element.productImage.data.toString())
+        productPrice : element.productPrice,
+        productDescription : element.productDescription,
+        productImagePath : path.join('..','assets', element.productImage.data.toString())
       };
       productArray.push(items);
     });

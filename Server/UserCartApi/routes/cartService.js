@@ -6,11 +6,11 @@ const mysqlDb  = require('mysql');
 //database connection
 const db = mysqlDb.createConnection({
     
-    host : process.env.host,
-    port :"3306",
-    user : process.env.user,
-    password: process.env.password+"##++",
-    database: process.env.database
+    host: "database-2.canjnlb2rm7z.eu-north-1.rds.amazonaws.com",
+    port : "3306",
+    user : "admin",
+    password : "Souvik9998##++",
+    database : "mydb"
 
 });
 
@@ -25,8 +25,8 @@ db.connect((err)=>{
 //store item in a cart
 router.post('/addToCart',(req,res)=>{
     const {productId,uuid,productName,productPrice,productAmount} = req.body;
-    console.log('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+')');
-    db.query('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+')',(err,result)=>{
+    // console.log('INSERT INTO cart (productId, uuid ,productName, productPrice, productAmount) VALUES ('+productId+','+ '"'+ uuid+'"'+','+ '"'+ productName+'"'+','+productPrice+','+ productAmount+')');
+    db.query('INSERT INTO cart set ?',{productId : productId ,productName:productName, productPrice : productPrice, productAmount: productAmount,uuid : uuid},(err,result)=>{
         if(err)
             res.send(err);
         else{
@@ -39,7 +39,7 @@ router.post('/addToCart',(req,res)=>{
 //get cart details
 router.get('/getCartDetails/:id',(req,res)=>{
     var uuid =  req.params.id;
-    db.query('select * from cart where uuid ='+uuid,(err,result)=>{
+    db.query('select * from cart where uuid = ?',uuid,(err,result)=>{
             if(err)
                 res.send(err)
             else{

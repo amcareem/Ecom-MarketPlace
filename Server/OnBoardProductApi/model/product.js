@@ -29,8 +29,10 @@ var productSchema = mongoose.Schema({
             type:Number, //or in piece
             default:-1
         }
+    },
+    productPrice:{
+        type:String
     }
-    
 
 })
 var productModel =  mongoose.model('productModel',productSchema);

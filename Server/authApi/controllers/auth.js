@@ -1,11 +1,12 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import db from "../connections/db.js"
+import db from "../connections/db.js";
+import {v4 as uuidv4} from 'uuid';
 
 export const register = async(req,res) =>{
     console.log(req.body)
     try{
-        const {name,email,password,confirmPassword} = req.body;
+        const {name,email,mobileNumber,password,confirmPassword} = req.body;
         db.query('select email from user where email = ?',[email], (error,results) =>{
             if(error){
                 console.log(error);
@@ -16,7 +17,7 @@ export const register = async(req,res) =>{
         });
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
-        db.query('insert into user set ?', {user_name:name, email:email, password:passwordHash},(error,results)=>{
+        db.query('insert into user set ?', {user_id: uuidv4(), user_name:name, email:email, mobile_number:mobileNumber, password:passwordHash},(error,results)=>{
             if(error){
                 console.log(error)
             }

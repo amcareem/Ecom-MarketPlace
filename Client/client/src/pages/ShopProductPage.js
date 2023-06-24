@@ -31,11 +31,11 @@ const ShopProductPage = () => {
       {
         productList.length >=1 ? productList.filter((currProduct,idx) => idx < 10).map((currProduct) =>{
           return <ProductCard 
+            productId = {currProduct.productId}
             productName = {currProduct.productName} 
             productDescription= {currProduct.productDescription} 
             productImagePath = {currProduct.productImagePath}
             productPrice = {currProduct.productPrice}
-            productDescription = {currProduct.productDescription}
           />
         }): <div className='noResult'>No result found...</div>
       }

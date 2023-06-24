@@ -1,33 +1,33 @@
 import { useRef, useState } from "react";
 import { FaTimes,FaBars } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useGlobalContext } from "./context";
+import { Link, useNavigate } from "react-router-dom";
+import Navlink from "./Navlink.js";
 function Navbar() {
-	const[isMobile,setIsMobile] = useState(false);
-	const {userName,loginStatus} = useGlobalContext();
-	isMobile ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
+	const[open,setOpen] = useState(false);
+	// const loginStatus = window.localStorage.getItem("loginStatus");
+	// const logout = () =>{
+	// 	window.localStorage.clear();
+	// 	navigate("/login");
+	// }
+	// isMobile ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
 	return (
-		<header className="main-nav">
-			<Link to = '/' className="logo">eCommerce</Link>
-			<nav 
-				className={isMobile ? "menu-link mobile-menu-link" : "menu-link"}
-				onClick={() => setIsMobile(false)}>
-				<ul>
-				<li><Link to='/' className="home">Home</Link></li>
-				<li><Link href="/#" className="orders">Orders</Link></li>
-				{/* <li><Link to ='/Login' className="login">Login</Link></li> */}
-				<li><Link href="/#" className="orders">Orders</Link></li>
-				<li><Link to ='/Login' className="login">
-				{(!loginStatus) ? "Login" : userName }</Link></li>
+		<>
+		<nav className='relative bg-black text-sky-400 flex justify-around items-center h-24'>
+			<div className='z-50 md:w-auto w-full px-4 flex justify-between'>
+				<div className='text-xl'><Link className='no-underline hover:no-underline text-sky-400' to = '/'>eCommerce</Link></div>
+				<div className='md:hidden text-3xl'onClick={() =>setOpen(!open)}>
+					<ion-icon name={`${open ? "close" : "menu"}`}></ion-icon>
+				</div>
+			</div>
+			<ul className='md:flex md:justify-center hidden pt-4 px-3 items-center gap-8'>
+				<Navlink />
 				</ul>
-				
-			</nav>
-			<button className="nav-btn" 
-			onClick={() => setIsMobile(!isMobile)}>
-				{isMobile ?<a><FaTimes/></a>:
-				<a><FaBars/></a>}
-			</button>
-		</header>
+			<ul className={`md:hidden bg-black absolute w-full h-screen top-0 py-24 pl-4 
+                      duration-500 ${open ? "left-0" : "left-[-100%]"}`}>
+        		<Navlink/>
+      		</ul>
+		</nav>
+		</>
 	);
 }
 

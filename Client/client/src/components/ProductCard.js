@@ -1,7 +1,25 @@
+import axios from 'axios';
 import React from 'react'
 import { useState } from 'react';
+import { useGlobalContext } from './context';
 const ProductCard = (props) => {
   const[productAmount,setProductAmount] = useState(0);
+  const{userInfo} = useGlobalContext();
+  const product = {
+    productId : props.productId,
+    uuid : userInfo.userId,
+    productName: props.productName,
+    productPrice: props.productPrice,
+    productAmount: productAmount
+  }
+  const addToCart = async() =>{
+    return await axios
+      .post('http://localhost:5000/api/addToCart',product)
+      .then(res => console.log(res.data))
+      .catch(err =>console.log(err))
+
+  }
+  
   const incAmount = () =>{
     (productAmount < 9) ? setProductAmount(productAmount+1) : setProductAmount(productAmount);
   }
@@ -23,6 +41,7 @@ const ProductCard = (props) => {
             <div className='product-amount'>{productAmount}</div>
             <button className='amount-button' onClick={incAmount}>+</button>
           </div>
+          <div><button className='cart-button' onClick={addToCart}>Add to cart</button></div>
         </div>
         
 

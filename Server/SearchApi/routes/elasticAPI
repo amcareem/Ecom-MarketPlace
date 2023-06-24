@@ -6,25 +6,27 @@ const { Client } = require('@elastic/elasticsearch')
 
     //connect to client api
     const client = new Client({
-        cloud: { id: '14633ba15cc240c7b994d8756b97b089:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDZiNjZmYjljY2YyMzRjYjg5OGUwMWYxYWFkODUxMzUzJGMxZDcyODdkMjQyMDRhMDA4MjBhMGU3MWNiZDI3Yzlk' },
-        auth: { apiKey:  'TkVvdm80WUJ1VXBNUnpSWWlwd0c6dDRldm93WWhRaEtsNl90RWgtbkxpZw=='}
+        cloud: { id: 'elastic:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDdkMzhhZjFlOWJmMDRlMTc5NTI1NjcxNjhkOWRiYzE2JGE2ZWI3Zjc4OGEzNzQ5MWI4NDc2YjA4NThiNjVlZTc4' },
+        auth: { apiKey:  'RndWT3RJZ0JRQmUwRnhmZFpoZ286dGhQU29lbzlUclNaY1NGR2sxOElSQQ=='}
       })
 
 //       async function run () {
 //         // 
+//         await client.index({
+//             index: 'search-store-details',
+//             document: {
+//               shopId : 99,
+//               storeName : 'Swarup Biriyani',
+//               type : 'Food',
+//               Time : '5:00 pm - 11:00 Pm '
+//             }
+//           })
+        
         
 //         await client.index({
 //           index: 'search-store-details',
 //           document: {
-//             storeName : 'Swaruper Enterprice',
-//             type : 'HardWare',
-//             Time : '10:00 Am - 8:00 Pm '
-//           }
-//         })
-        
-//         await client.index({
-//           index: 'search-store-details',
-//           document: {
+//             shopId : 98,
 //             storeName : 'Swarup Sports',
 //             type : 'Sports Good',
 //             Time : '9:00 Am - 8:00 Pm '
@@ -34,6 +36,7 @@ const { Client } = require('@elastic/elasticsearch')
 //         await client.index({
 //           index: 'search-store-details',
 //           document: {
+//             shopId : 97,
 //             storeName : 'Munna General Store',
 //             type : 'Grocery',
 //             Time : '10:00 Am - 8:00 Pm '
@@ -43,6 +46,7 @@ const { Client } = require('@elastic/elasticsearch')
 //         await client.index({
 //           index: 'search-store-details',
 //           document: {
+//             shopId : 96,
 //             storeName : 'Kokonod Vege Shop',
 //             type : 'WholeSale Veg',
 //             Time : '6:00 Am - 12:00 Pm '
@@ -52,19 +56,98 @@ const { Client } = require('@elastic/elasticsearch')
 //         await client.index({
 //           index: 'search-store-details',
 //           document: {
+//             shopId : 95,
 //             storeName : 'Souvik Biriyani',
 //             type : 'Food',
 //             Time : '5:00 pm - 11:00 Pm '
 //           }
 //         })
-//          await client.index({
-//           index: 'search-store-details',
-//           document: {
-//             storeName : 'Swarup Biriyani',
-//             type : 'Food',
-//             Time : '5:00 pm - 11:00 Pm '
-//           }
-//         })
+//         await client.index({
+//             index: 'search-store-details',
+//             document: {
+//               shopId : 94,
+//               storeName : 'Swaruper Enterprice',
+//               type : 'HardWare',
+//               Time : '10:00 Am - 8:00 Pm '
+//             }
+//           })
+         
+//             await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                 shopId : 93,
+//                 storeName : 'mayalaxmi store',
+//                 type : 'HardWare',
+//                 Time : '10:00 Am - 8:00 Pm '
+//                 }
+//             })
+//             await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 92,
+//                   storeName : 'loknath snacks',
+//                   type : 'snacks and beverages',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+//               await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 91,
+//                   storeName : 'arko publishers',
+//                   type : 'paperwork',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+//               await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 90,
+//                   storeName : 'dutta brothers',
+//                   type : 'stationary',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+//               await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 89,
+//                   storeName : 'manasha bastralay',
+//                   type : 'clothing',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+//               await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 88,
+//                   storeName : 'happy electronics',
+//                   type : 'Electronics',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+//               await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 87,
+//                   storeName : 'jagannath house',
+//                   type : 'mudikhana',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+//               await client.index({
+//                 index: 'search-store-details',
+//                 document: {
+//                   shopId : 86,
+//                   storeName : 'Pangopal sweet',
+//                   type : 'sweet',
+//                   Time : '10:00 Am - 8:00 Pm '
+//                 }
+//               })
+              
+              
+              
+            
 
 //     await client.indices.refresh({ index: 'search-store-details' })
 

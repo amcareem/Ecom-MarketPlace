@@ -27,17 +27,19 @@ const ShopProductPage = () => {
   
   return (
     <>
-      <div className='mt-10 flex px-4 gap-8'>
+      <div className='font-Inter mt-10 flex px-4 gap-8'>
         <div className='w-3/12 bg-cardColor h-screen'>
           <h1 className='text-center'>Product Category</h1>
         </div>
-        <div className='w-8/12'> {
-        productList.length >=1 ? productList.filter((currProduct,idx) => idx < 10).map((currProduct) =>{
+        <div className='w-7/12'> {
+        productList.length >=1 ? productList.map((currProduct) =>{
           return <Productcard 
             productName = {currProduct.productName} 
             productDescription= {currProduct.productDescription} 
             productImagePath = {currProduct.productImagePath}
             productPrice = {currProduct.productPrice}
+            productId = {currProduct.productId}
+            shopId = {shopId}
           />
         }): <div className='noResult'>No result found...</div>
       }</div>

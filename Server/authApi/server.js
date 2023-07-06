@@ -5,7 +5,8 @@ import mysql from "mysql";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import db from "./connections/db.js";
-
+import cartRouter from "./routes/cartService.js";
+import addressRouter from './routes/userAddress.js';
 
 dotenv.config();
 const app = express();
@@ -22,9 +23,11 @@ db.connect((err) =>{
         return;
     }
     console.log("database connected");
-});
+}); 
 
 app.use("/auth",authRoutes);
+app.use("/cart",cartRouter);
+app.use(addressRouter);
 
 app.listen(process.env.PORT, ()=>{
     console.log(`server connected on port ${process.env.PORT}`);

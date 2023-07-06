@@ -6,19 +6,23 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const[open,setOpen] = useState(false);
+    const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+    if(userInfo){
+        var uuid = userInfo.user_id;
+    }
     const handleClick = ()=>{
         setOpen(!open);
     }
     open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto'
   return (
     <>
-     <div className='font-Inter w-full flex h-20 pr-3 pl-4 lg:pr-5 lg:pl-8 bg-navColor justify-between text-white items-center'>
+     <div className='font-Inter font-semibold w-full flex h-20 pr-3 pl-4 lg:pr-5 lg:pl-8 bg-navColor justify-between text-white items-center'>
         <Link to='/'><h1 className='text-xl hidden lg:block'>Ecommerce</h1></Link>
         <div className='w-9/12 lg:w-5/12'><Searchbar/></div>
         <ul className='hidden lg:flex text-md justify-center items-center'>
             <li className='px-4'>Home</li>
             <li className='px-4'>Orders</li>
-            <li className='px-4'>Cart</li>
+            <li className='px-4'><Link to={`/user-cart/${uuid}`}>Cart</Link></li>
             <li className='px-4'><Myaccount/></li>
         </ul>
 

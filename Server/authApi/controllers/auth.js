@@ -22,8 +22,7 @@ export const register = async(req,res) =>{
                 console.log(error)
             }
             else{
-                // console.log(res);
-                return res.send({msg:"successfully registered"})
+                return res.status(201).json({msg:"successfully registered"})
             }
         })
     }
@@ -42,7 +41,7 @@ export const login = async (req, res) => {
         if(results.length = 0){
             return res.status(400).json({msg:"you havn't registered yet"})
         }
-    });
+        });
         db.query('select * from user where email = ?',[email],(error,rows,fields) =>{
             if(error){
                 console.log(error);
@@ -62,3 +61,6 @@ export const login = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+export const isAuthorized = async(req,res) =>{
+    res.status(200).json({msg:"authorized"});
+}

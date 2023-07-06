@@ -3,6 +3,7 @@ import axios from 'axios';
 const AppContext = React.createContext();
 
 const AppProvider = ({children}) => {
+    const token = window.localStorage.getItem("token");
     const[isLoading, setIsLoading] = useState(true);
     const[storeList,setStoreList] = useState([]);
     const[searchStoreList,setSearchStoreList] = useState([]);
@@ -11,13 +12,36 @@ const AppProvider = ({children}) => {
     const[shopIdForProducts,setShopIdForProducts] = useState("");
     const[productList,setProductList] = useState([]);
     const[loginStatus,setLoginStatus] = useState(false);
+    const[cartProductCounter,setCartProductCounter] = useState(0);
+    const[cartTotalPrice,setCartTotalPrice] = useState(0);
+    const[userAddress,setUserAddress] = useState([]);
+    const[defaultAddress,setDefaultAddress] = useState("");
     const[userInfo,setUserInfo] = useState({
       userName : "",
       userId : "",
       accessToken: "",
       email: ""
     })
-    const[cartProducts,setCartProducts] = useState([]);
+    const[cartList,setCartList] = useState([]);
+    // useEffect(() =>{
+    //     isAuthorized();
+    // },[]);
+    // const isAuthorized = async()=>{
+    //   return await axios
+    //   .get('http://localhost:9000/auth/isUserAuth',{
+    //     headers : {
+    //         "Authorization" : window.localStorage.getItem("token"), 
+    //       }
+    //   })
+    //   .then((res)=>{
+    //     console.log(res);
+    //     setLoginStatus(true)
+    //   })
+    //   .catch((err)=>{
+    //     console.log(err);
+    //   })
+    // }
+    // console.log(loginStatus);
     // const getAll = async() => {
     //     try {
     //       // Handle successful response from backend
@@ -44,16 +68,10 @@ const AppProvider = ({children}) => {
     //       console.log(error);
     //     }
     //   }
-      // useEffect(() =>{
-      //   if(clickSearch === true){
-      //     console.log(clickSearch);
-      //     clickSearch = false;  
-          
-      //   }
-      //   getAll();
-      // },[]);
+      
     return <AppContext.Provider 
-    value={{storeList,setStoreList,productList,setProductList,userInfo,setUserInfo,loginStatus,setLoginStatus,cartProducts,setCartProducts,searchQuery,setSearchQuery,searchStoreList,setSearchStoreList}}>
+    value={{storeList,setStoreList,productList,setProductList,userInfo,setUserInfo,loginStatus,setLoginStatus,cartList,setCartList,searchQuery,setSearchQuery,searchStoreList,setSearchStoreList,cartProductCounter,setCartProductCounter,cartTotalPrice,setCartTotalPrice
+    ,userAddress,setUserAddress,defaultAddress,setDefaultAddress}}>
         {children}
     </AppContext.Provider>  
 }

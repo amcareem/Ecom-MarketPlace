@@ -1,0 +1,36 @@
+use mydb;
+select * from cart;
+delete from cart where shopId = 99;
+SET SQL_SAFE_UPDATES = 0;
+CREATE TABLE cart (
+    productId varchar(100) NOT NULL,
+    uuid VARCHAR(100) NOT NULL,
+    productName VARCHAR(255) NOT NULL,
+    productAmount DECIMAL(10,2) NOT NULL,
+    shopId varchar(100) NOT NULL,
+    ImagePath varchar(255) NOT NULL,
+    quantity INT NOT NULL,
+    PRIMARY KEY (productId, uuid)
+);
+drop table user
+CREATE TABLE user (
+    user_id varchar(255) NOT NULL,
+    user_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    mobile_number VARCHAR(15) NOT NULL,
+    PRIMARY KEY (user_id)
+);
+
+create table user_address(
+	id varchar(255) NOT NULL,
+	user_id varchar(255) NOT NULL,
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    state VARCHAR(60) NOT NULL,
+    postal_code VARCHAR(50) NOT NULL,
+    country VARCHAR(50) NOT NULL,
+    mobile_number varchar(20) NOT NULL
+    PRIMARY KEY (id)
+)

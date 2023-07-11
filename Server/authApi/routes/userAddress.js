@@ -69,21 +69,14 @@ router.put('/setDefaultAddress/:id' ,async(req,res) =>{
     }
 })
 
-// router.get('/getDefaultAddress' ,async(req,res) =>{
-//     const addressId = req.params.id;
-//     try{
-//         await db.query('select id from user_address where is_default = ?',[true],(err,result)=>{
-//             if(err){
-//                 console.log(err);
-//             }
-
-//             res.status(200).json({msg:"got the default value successfully",result : result});
-//         });
-
-        
-//     }
-//     catch(err){
-//         res.status(500).json({msg:"internal server error"});
-//     }
-// })
+router.delete('/deleteUserAddress/:addressId', async(req, res) => {
+    const { addressId } = req.params;
+    console.log(addressId);
+    try {
+      await db.query('DELETE FROM user_address WHERE id = ?', [addressId]);
+      res.status(200).json({ msg: 'successfully deleted' });
+    } catch (err) {
+      res.status(500).json({ err: err.message });
+    }
+});
 export default router;

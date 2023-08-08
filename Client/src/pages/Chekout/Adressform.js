@@ -40,15 +40,15 @@ const Addressform = ({onClose}) => {
   };
 
   return (
-    <div className="font-Inter max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Shipping Address</h2>
+    <div className="font-Inter w-full mx-auto">
+      <h2 className="text-base font-semibold mb-3 lg:text-2xl lg:font-bold lg:mb-6">Shipping Address</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="fullName">
+        <div className="mb-1 lg:mb-3">
+          <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="fullName">
             Full Name
           </label>
           <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+            className="appearance-none border rounded text-xs lg:text-base w-full h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
             id="fullName"
             name="fullName"
             type="text"
@@ -57,12 +57,12 @@ const Addressform = ({onClose}) => {
           />
         </div>
 
-        <div className="mb-3">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="addressLine1">
+        <div className="mb-1 lg:mb-3">
+          <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="addressLine1">
             Address Line 1
           </label>
           <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+            className="appearance-none border rounded text-xs lg:text-base w-full h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
             id="addressLine1"
             name="addressLine1"
             type="text"
@@ -71,12 +71,12 @@ const Addressform = ({onClose}) => {
           />
         </div>
 
-        <div className="mb-3">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="addressLine2">
+        <div className="mb-1 lg:mb-3">
+          <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="addressLine2">
             Address Line 2
           </label>
           <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+            className="appearance-none border rounded text-xs lg:text-base w-full h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
             id="addressLine2"
             name="addressLine2"
             type="text"
@@ -85,13 +85,13 @@ const Addressform = ({onClose}) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-3">
+        <div className="grid grid-cols-2 gap-4 mb-1 lg:mb-3">
           <div>
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="city">
+            <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="city">
               City
             </label>
             <input
-              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+              className="appearance-none border rounded w-full text-xs lg:text-base h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
               id="city"
               name="city"
               type="text"
@@ -101,11 +101,11 @@ const Addressform = ({onClose}) => {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="state">
+            <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="state">
               State
             </label>
             <input
-              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+              className="appearance-none border rounded w-full text-xs lg:text-base h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
               id="state"
               name="state"
               type="text"
@@ -115,13 +115,13 @@ const Addressform = ({onClose}) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-3">
+        <div className="grid grid-cols-2 gap-2 lg:gap-4 mb-1 lg:mb-3">
           <div>
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="postalCode">
+            <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="postalCode">
               Postal Code
             </label>
             <input
-              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+              className="appearance-none border rounded w-full text-xs lg:text-base h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
               id="postalCode"
               name="postalCode"
               type="text"
@@ -131,11 +131,11 @@ const Addressform = ({onClose}) => {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="country">
+            <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="country">
               Country
             </label>
             <input
-              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+              className="appearance-none border rounded w-full text-xs lg:text-base h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
               id="country"
               name="country"
               type="text"
@@ -143,12 +143,12 @@ const Addressform = ({onClose}) => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="mb-3">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="mobileNumber">
+          <div className="mb-3 lg:mb-3 col-span-2">
+          <label className="block text-gray-700 font-medium text-sm lg:text-base mb-1 lg:font-bold lg:mb-2" htmlFor="mobileNumber">
             Mobile Number
           </label>
           <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+            className="appearance-none border rounded w-full text-xs lg:text-base h-6 lg:h-9 py-2 px-1 lg:px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
             id="mobileNumber"
             name="mobileNumber"
             type="text"
@@ -159,7 +159,7 @@ const Addressform = ({onClose}) => {
         </div>
 
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold lg:font-bold py-1 lg:py-2 px-2 text-sm lg:text-base lg:px-4 rounded"
           type="submit"
         >
           Submit

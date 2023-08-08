@@ -19,6 +19,13 @@ const Addresspage = () => {
     .get(`http://localhost:9000/getUserAddress/${userId}`)
     .then((res)=>{
       console.log(res.data);
+      if(res.data.length === 1){
+        setDefaultAddress(res.data[0].id)
+      }
+      res.data.map((curr)=>{
+        if(curr.is_default)setDefaultAddress(curr.id);
+      })
+      
       setUserAddress(res.data);
     })
     .catch((err)=>{
@@ -39,7 +46,7 @@ const Addresspage = () => {
   return (
     <>
       <div className='font-Inter'>
-        <button onClick={()=>setIsOpen(true)} className='cursor-default border-[3px] rounded-lg border-dashed border-gray-600 text-gray-600 w-full h-16 bg-white text-xl font-semibold flex items-center justify-center'>+ Use this address</button>
+        <button onClick={()=>setIsOpen(true)} className='cursor-default border-[2px] lg:border-[3px] rounded-lg border-dashed border-gray-600 text-gray-600 w-full h-10 lg:h-16 bg-white text-base lg:text-xl font-semibold flex items-center justify-center'>+ Use this address</button>
         <Modal open={isOpen} onClose={()=>setIsOpen(false)}>
           <Addressform onClose={()=>setIsOpen(false)}/>
         </Modal>

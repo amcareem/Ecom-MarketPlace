@@ -14,7 +14,7 @@ const Home = () => {
     <div className='bg-navColor w-full h-[60vh] md:h-[70vh] pt-2 px-2'>
     <div className='font-Inter ml-6 my-3 text-lg md:text-2xl md:ml-32 md:my-6 text-white'>Top store picks for you</div>
     <Storehub/></div>
-    <div className='h screen'></div>
+    <div className='bg-mybg h-screen'></div>
     
     
     {/* <h1>hello</h1> */}

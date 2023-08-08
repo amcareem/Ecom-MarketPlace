@@ -7,11 +7,12 @@ import { useState } from 'react';
 import { PuffLoader } from 'react-spinners';
 
 const Storesearch = () => {
-  const searchQuery = window.localStorage.getItem('searchQuery');
-  const{searchStoreList,setSearchStoreList} = useGlobalContext();
+  const{searchStoreList,setSearchStoreList,searchQuery,setSearchQuery} = useGlobalContext();
   let [loading, setLoading] = useState(true);
   useEffect(()=>{
-    handleSearch()
+    const searchQuery = window.localStorage.getItem('searchQuery');
+    setSearchQuery(searchQuery);
+    handleSearch(searchQuery)
     if(searchStoreList.length > 0){
       setLoading(false);
     }
@@ -21,7 +22,7 @@ const Storesearch = () => {
       },1100)
     }
   },[])
-  const handleSearch = async () => {
+  const handleSearch = async (searchQuery) => {
     return await axios
       .post('http://localhost:4000/api/searchResult', { query: searchQuery })
       .then((response) => {
@@ -34,10 +35,12 @@ const Storesearch = () => {
   return (
     <>
       {
-        loading ? 
-        <PuffLoader className='m-auto mt-60'color="#0F5398" size={80} loading={loading}/>
+        loading ?
+        <div className='w-screen h-screen'>
+        <PuffLoader className='m-auto mt-60 'color="#0F5398" size={80} loading={loading}/>
+        </div> 
         :
-        <div className='flex m-4 gap-4'>
+        <div className='flex m-4 gap-4 h-min-screen'>
           <div className='bg-mybg rounded-md w-2/12 h-screen font-Inter flex flex-col'>
             <div className='text-xl bg-buttonColor rounded-t-md text-white text-center h-12 py-2'>
               <div>Categories</div>

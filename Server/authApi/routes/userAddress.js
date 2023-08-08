@@ -71,10 +71,34 @@ router.put('/setDefaultAddress/:id' ,async(req,res) =>{
 
 router.delete('/deleteUserAddress/:addressId', async(req, res) => {
     const { addressId } = req.params;
-    console.log(addressId);
+    // console.log(addressId);
+    let defaultAddressId;
     try {
-      await db.query('DELETE FROM user_address WHERE id = ?', [addressId]);
-      res.status(200).json({ msg: 'successfully deleted' });
+        await db.query('SELECT is_default FROM user_address WHERE id = ?', [addressId],async(err,res)=>{
+        if(err){
+            console.log(err);
+        }
+        const isDefault = res[0];
+        const isDefaultResult = isDefault.is_default;
+        if(isDefault && isDefaultResult){
+            await db.query('delete from user_address where id = ?',[addressId],async(err,res)=>{
+                await db.query('update user_address set is_default = ? order by id asc limit 1',[true],async(err,res)=>{
+                    await db.query('select id from user_address where is_default = ?',[true],async(err,result)=>{
+                        if(result.length > 0){
+                            defaultAddressId = result[0].id;
+                            console.log(defaultAddressId);
+                        }
+                    }) 
+                })
+            });   
+        }
+        else{
+            await db.query('delete from user_address where id = ?',[addressId]);
+        } 
+    });
+        setTimeout(()=>{
+            res.status(200).json({ msg: 'successfully deleted' ,defaultAddressId:defaultAddressId});
+        },2000)
     } catch (err) {
       res.status(500).json({ err: err.message });
     }

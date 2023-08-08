@@ -3,16 +3,21 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from './context';
 import Storesearch from '../pages/Storesearch';
-
+import { useLocation } from 'react-router-dom';
 const Searchbar = () => {
   const [searchQuery,setSearchQuery] = useState([]);
   const{searchStoreList,setSearchStoreList} = useGlobalContext();
   // const[storeList, setStoreList] = useState([]);
   // const[searchQuery,setSearchQuery] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
-  // useEffect(() =>{
-  //   getAll();
-  // },[])
+  useEffect(() =>{
+    if(location.pathname === '/Storesearch'){
+      const searchQuery = window.localStorage.getItem('searchQuery');
+      setSearchQuery(searchQuery);
+    }
+
+  },[])
 
   // const getAll = async() => {
   //   return await axios
@@ -23,6 +28,9 @@ const Searchbar = () => {
   //     })
   //     .catch((err) => console.log(err));
     
+  // }
+  // if(location.pathname !== '/Storesearch'){
+  //   setSearchQuery(null)
   // }
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -42,7 +50,7 @@ const Searchbar = () => {
     {/* <div className='flex justify-center gap-10 items-center '> */}
     {/* <div className='h-[60vh] md:block hidden w-40 rounded-lg bg-white'></div> */}
     {/* <div className='h-[60vh] w-11/12 md:w-9/12 py-7 px-6 rounded-lg border-black bg-white'> */}
-      <form className='font-Inter drop-shadow-sm text-black flex justify-center items-center bg-white w-full h-10 lg:h-12 px-2 py-2 rounded-xl' onSubmit={handleSearch}>
+      <form className='font-Inter drop-shadow-sm text-black flex justify-center items-center bg-white w-full h-10 lg:h-12 px-1 lg:px-2 py-2 rounded-xl' onSubmit={handleSearch}>
         <div className='pt-2 hidden sm:block md:text-xl'><ion-icon name="search"></ion-icon></div>
         <input 
           name='item' 

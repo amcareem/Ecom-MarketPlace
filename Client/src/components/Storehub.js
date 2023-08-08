@@ -63,7 +63,7 @@ const Storehub = () => {
         className="mySwiper rounded-md w-full h-full ml-auto mr-auto"
       >
         {
-          storeList.map((currStore) =>{
+          storeList.filter((curr,idx) => idx < 12).map((currStore) =>{
             return <SwiperSlide className=''><Storecard storeName = {currStore._source.storeName} shopId = {currStore._source.shopId}/></SwiperSlide>
           })
         }

@@ -15,12 +15,17 @@ var productSchema = mongoose.Schema({
     },
     mainImage:{
         data:Buffer,
-        contentType:String
+        contentType:String,
+        // required:true
     },
     productImage:[{
         data:Buffer,
         contentType:String
     }],
+    productDescription:{
+        type : String,
+        required:true
+    },
     productAmount: {
         weight: {
             type: String, // in KG
@@ -38,7 +43,6 @@ var productSchema = mongoose.Schema({
     },
     expiryDate: {
         type: Date,
-        
     },
     manufactureDate: {
         type: Date 

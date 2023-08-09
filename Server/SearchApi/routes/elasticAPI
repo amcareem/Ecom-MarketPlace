@@ -6,14 +6,32 @@ const { Client } = require('@elastic/elasticsearch')
 
     //connect to client api
     const client = new Client({
-        cloud: { id: 'My_deployment:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDczMTllOGJiM2I1MDQxNzU5YWFmZjU5M2EyZDA1OWY0JDRhYzg1YTg1MWEyZDQzMjE4YjEyMTBiNzIzMTdlOGVi' },
-        auth: { apiKey:  'cVY3LUM0a0JycHRhQnI5dlRpUjY6Wld1MWQ5R2JSV2UwSWhNLXg2SHE1dw=='}
+        cloud: { id: 'My_deployment:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJGYwNDU4ZTQxYzdiZTQ4NzBiZDU1MWZlYWFkZTYzMzM4JGU5NjRiNjU3YzU5ZDQ0NGZiMzQ3M2UxMThlY2IxMmVm' },
+        auth: { apiKey:  'NGdYSnJJa0J6MFhwT2I4c1V1ZGk6ZHlfNUhFYVFUUWFsRENweGZlSjJBdw=='}
       })
-
+      async function run (req,res,next) {
+        console.log(req.body);
+        try{
+          await client.index({
+            index: 'shop-details',
+            document: {
+              shopId : req.body.id,
+              storeName : req.body.shopName,
+              type : req.body.shopType,
+              Time : '5:00 pm - 11:00 Pm '
+            }
+          })
+          await client.indices.refresh({ index: 'shop-details' })
+        res.status(201).json({msg:'registered'})
+        }catch (error) {
+        res.send(error);
+        next();
+    }
+  }
 //       async function run () {
 //         // 
 //         await client.index({
-//             index: 'search-store-details',
+//             index: 'shop-details',
 //             document: {
 //               shopId : 99,
 //               storeName : 'Swarup Biriyani',
@@ -24,7 +42,7 @@ const { Client } = require('@elastic/elasticsearch')
         
         
 //         await client.index({
-//           index: 'search-store-details',
+//           index: 'shop-details',
 //           document: {
 //             shopId : 98,
 //             storeName : 'Swarup Sports',
@@ -34,7 +52,7 @@ const { Client } = require('@elastic/elasticsearch')
 //         })
       
 //         await client.index({
-//           index: 'search-store-details',
+//           index: 'shop-details',
 //           document: {
 //             shopId : 97,
 //             storeName : 'Munna General Store',
@@ -44,7 +62,7 @@ const { Client } = require('@elastic/elasticsearch')
 //         })
         
 //         await client.index({
-//           index: 'search-store-details',
+//           index: 'shop-details',
 //           document: {
 //             shopId : 96,
 //             storeName : 'Kokonod Vege Shop',
@@ -54,7 +72,7 @@ const { Client } = require('@elastic/elasticsearch')
 //         })
       
 //         await client.index({
-//           index: 'search-store-details',
+//           index: 'shop-details',
 //           document: {
 //             shopId : 95,
 //             storeName : 'Souvik Biriyani',
@@ -63,7 +81,7 @@ const { Client } = require('@elastic/elasticsearch')
 //           }
 //         })
 //         await client.index({
-//             index: 'search-store-details',
+//             index: 'shop-details',
 //             document: {
 //               shopId : 94,
 //               storeName : 'Swaruper Enterprice',
@@ -73,7 +91,7 @@ const { Client } = require('@elastic/elasticsearch')
 //           })
          
 //             await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                 shopId : 93,
 //                 storeName : 'mayalaxmi store',
@@ -82,7 +100,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //             })
 //             await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 92,
 //                   storeName : 'loknath snacks',
@@ -91,7 +109,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //               })
 //               await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 91,
 //                   storeName : 'arko publishers',
@@ -100,7 +118,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //               })
 //               await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 90,
 //                   storeName : 'dutta brothers',
@@ -109,7 +127,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //               })
 //               await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 89,
 //                   storeName : 'manasha bastralay',
@@ -118,7 +136,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //               })
 //               await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 88,
 //                   storeName : 'happy electronics',
@@ -127,7 +145,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //               })
 //               await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 87,
 //                   storeName : 'jagannath house',
@@ -136,7 +154,7 @@ const { Client } = require('@elastic/elasticsearch')
 //                 }
 //               })
 //               await client.index({
-//                 index: 'search-store-details',
+//                 index: 'shop-details',
 //                 document: {
 //                   shopId : 86,
 //                   storeName : 'Pangopal sweet',
@@ -149,11 +167,11 @@ const { Client } = require('@elastic/elasticsearch')
               
             
 
-//     await client.indices.refresh({ index: 'search-store-details' })
+//     await client.indices.refresh({ index: 'shop-details' })
 
 //     // Let's search!
 //     const result= await client.search({
-//       index: 'search-store-details',
+//       index: 'shop-details',
 //       query: {
 //         match_phrase_prefix: {
 //             storeName: 'Swarup Biriyani'
@@ -172,11 +190,11 @@ async function run1 (req,res,next) {
     try {
          // here we are forcing an index refresh, otherwise we will not
     // get any result in the consequent search
-        await client.indices.refresh({ index: 'search-store-details' })
+        await client.indices.refresh({ index: 'shop-details' })
         const searchQuery =  req.body.query;
         console.log(searchQuery)
         const result= await client.search({
-          index: 'search-store-details',
+          index: 'shop-details',
           body: {
             query: {
                 match_phrase_prefix: {
@@ -202,9 +220,9 @@ async function run1 (req,res,next) {
     try {
          // here we are forcing an index refresh, otherwise we will not
     // get any result in the consequent search
-        await client.indices.refresh({ index: 'search-store-details' })
+        await client.indices.refresh({ index: 'shop-details' })
         const result = await client.search({
-          index: 'search-store-details',
+          index: 'shop-details',
           body: {
               query: {
                   match_all: {}
@@ -229,5 +247,5 @@ router.get('/getAll',run2,(req,res)=>{
     console.log("hello");
     
 })
-
+router.post('registerShop',run);
 module.exports = router;

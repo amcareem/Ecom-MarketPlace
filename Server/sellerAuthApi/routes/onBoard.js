@@ -67,6 +67,12 @@ router.post('/storeProduct',(req,res)=>{
           weight: req.body.weight, //in kg
           amount: req.body.amount  // in pieces
         } ,
+        expectedDelivery: req.body.expectedDelivery,
+        expiryDate: req.body.expiryDate,
+        manufactureDate: req.body.manufactureDate,
+        brand: req.body.brand,
+        color: req.body.color,
+        gender: req.body.gender,
         mainImage: mainImageData,
         productImage: productImages,
         productPrice:req.body.productPrice
@@ -89,14 +95,26 @@ router.get("/getProduct/:shopId", async (req, res) => {
   try {
     const shopId = req.params.shopId;
     const result = await productModel.find({ shopId: req.params.shopId });
+    console.log(result);
     var productArray = [];
     result.forEach((element) => {
+      const productImages = element.productImage.map((image) => ({
+        imagePath: path.join('..', 'assets', `${shopId}`, image.data.toString())
+      }));
       const items = {
         productId: element._id,
         productName: element.productName,
         productDescription: element.productDescription,
         productPrice: element.productPrice,
         productDescription: element.productDescription,
+        expectedDelivery: element.expectedDelivery,
+        expiryDate: element.expiryDate,
+        manufactureDate: element.manufactureDate,
+        brand: element.brand,
+        color: element.color,
+        gender: element.gender,
+        productImage: productImages,
+        isAvailable: element.isAvailable,
         mainImagePath : path.join('..','assets',`${shopId}`,element.mainImage.data.toString()),
       };
       productArray.push(items);

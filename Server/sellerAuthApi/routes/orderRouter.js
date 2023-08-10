@@ -6,7 +6,7 @@ const protect = authController.protectRoutes;
 
 //Routes
 Router.post("/addOrder", protect, orderController.addOrder);
-Router.patch("/udateStatus", protect, orderController.updateStatus);
+Router.patch("/udateStatus",orderController.updateStatus);
 Router.patch("updateDeliveryDate", protect, orderController.updateDeliveryDate);
 Router.get(
   "/getOrderDetails/:shopId",

@@ -3,13 +3,15 @@ import Myaccount from './Myaccount'
 import Searchbar from '../Searchbar';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useGlobalContext } from '../context';
 
 const Navbar = () => {
     const[open,setOpen] = useState(false);
-    const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-    if(userInfo){
-        var uuid = userInfo.user_id;
-    }
+    const {user,cartProductCounter} = useGlobalContext();
+    const userId = user.userId;
+    // if(userInfo){
+    //     var uuid = userInfo.user_id;
+    // }
     const handleClick = ()=>{
         setOpen(!open);
     }
@@ -22,7 +24,7 @@ const Navbar = () => {
         <ul className='hidden lg:flex text-md justify-center items-center'>
             <li className='px-4'><Link to='/'>Home</Link></li>
             <li className='px-4'>Orders</li>
-            <li className='px-4'><Link to={`/user-cart/${uuid}`}>Cart</Link></li>
+            <li className='px-4'><Link to={`/user-cart/${userId}`}>Cart({cartProductCounter})</Link></li>
             <li className='px-4'><Myaccount/></li>
             
         </ul>
@@ -37,7 +39,7 @@ const Navbar = () => {
             <ul className={open ?'p-1 w-[100%] h-screen z-40 bg-navColor items-center fixed top-[80px] left-0 ease-in-out duration-300': 'fixed top-[80px] left-[-100%]'}>
                 <li className='p-3 border-b border-gray-600' onClick={handleClick}><Link to='/'>Home</Link></li>
                 <li className='p-3 border-b border-gray-600'>Orders</li>
-                <li className='p-3 border-b border-gray-600' onClick={handleClick}><Link to={`/user-cart/${uuid}`}>Cart</Link></li>
+                <li className='p-3 border-b border-gray-600' onClick={handleClick}><Link to={`/user-cart/${userId}`}>Cart</Link></li>
                 <li className='p-3 border-b border-gray-600'><Myaccount/></li>
                 {/* <li className='p-3 border-b border-gray-600 '><Myaccount/></li> */}
                 

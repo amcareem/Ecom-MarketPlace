@@ -224,8 +224,8 @@ const Addproductinfo = () => {
                     <div className='flex flex-col gap-3 w-6/12'>
                         <div className='font-medium text-base'>Color</div>
                         <input type='text'
-                        name='gender'
-                        value={formData.gender}
+                        name='color'
+                        value={formData.color}
                         onChange={handleChange}
                         className='border-[1.5px] border-zinc-300 h-10 rounded-md px-3'
                         ></input>

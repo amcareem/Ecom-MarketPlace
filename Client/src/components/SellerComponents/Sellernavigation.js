@@ -53,9 +53,9 @@ const Sellernavigation = () => {
                     <div onClick={()=>handleClick()} className={`h-12 w-full px-8  flex items-center ${isActiveNormal(location.pathname,'/seller')}`}><Link to='/seller'>Dashboard</Link></div>
                     <div className=''>
                         <div className='flex items-center h-12 gap-2 w-full px-8'onClick={()=>handleDropdownFirst()} >
-                            <div  className={isActiveProduct(location.pathname)}><Link to='/seller/productmanagement-page/product-details'>
-                                Product management</Link>
-                            </div>
+                        <Link to='/seller/productmanagement-page/product-details'><div  className={isActiveProduct(location.pathname)}>
+                                Product management
+                            </div></Link>
                             <div className={isActiveProduct(location.pathname)}><ion-icon name="caret-down-outline"></ion-icon></div>
                         </div>
                         <div className={isDropdownFirst ? 'px-6 flex w-full flex-col opacity-100 transition duration-150' : 'opacity-100 h-0 overflow-hidden'}>
@@ -67,7 +67,7 @@ const Sellernavigation = () => {
                     </div>
                     <div className=''>
                         <div className='flex items-center gap-4 h-12 w-full px-8 'onClick={()=>handleDropdownSecond()}>
-                            <div className={isActiveOrder(location.pathname)}><Link to='/seller/ordermanagement-page/order-details'>Order management</Link></div>
+                            <Link to='/seller/ordermanagement-page/order-details'><div className={isActiveOrder(location.pathname)}>Order management</div></Link>
                             <div className={isActiveOrder(location.pathname)}><ion-icon name="caret-down-outline"></ion-icon></div>
                         </div>
                         <div className={isDropdownSecond ? 'px-6 flex flex-col opacity-100 transition duration-150' : 'opacity-0 h-0 overflow-hidden'}>

@@ -197,14 +197,23 @@ async function run1 (req,res,next) {
           index: 'shop-details',
           body: {
             query: {
-                match_phrase_prefix: {
-                    storeName: searchQuery
+                bool: {
+                  should: [
+                    { "match_phrase_prefix": { "storeName": { "query": searchQuery+"*"} } },
+                    { "match_phrase_prefix": { "type": {"query" : searchQuery+"*" } } },
+                    { "fuzzy": { "storeName": { "value": searchQuery, "fuzziness": "auto" } } },
+                    // { "match_phrase": { "type": {"query" : searchQuery } } }
+                    { "match": { "type": { "query": searchQuery, "operator": "or" } } },
+                    { "match": { "storeName": { "query": searchQuery, "operator": "or" } } },
+                  ],
+                  minimum_should_match: 1
                 }
+              }
             }
-        }
         })
-      
+        console.log(result.hits.hits);
         res.send(result.hits.hits);
+        
         next();
       
     } catch (error) {
@@ -224,6 +233,7 @@ async function run1 (req,res,next) {
         const result = await client.search({
           index: 'shop-details',
           body: {
+              size : 20,
               query: {
                   match_all: {}
               }

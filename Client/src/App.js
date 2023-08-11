@@ -42,39 +42,40 @@ import { useGlobalContext } from './components/context';
 // import UserCart from './pages/UserCart';
 function App() {
   const {authorizationMessage,setAuthorizationMessage} = useGlobalContext();
-  const token = window.localStorage.getItem("token")
-  const isAuthorized = async()=>{
-    try{
-    const res = await axios.get('http://localhost:9000/auth/isUserAuth',{
-      headers : {
-        "Authorization" : token,
-      }
-    })
-    setAuthorizationMessage(res.data.msg);
-    console.log(res);
-  }
-  catch(err){
-    console.log(err);
-  }
-  }
-  const isSellerAuthorized = async()=>{
-    try{
-      const res = await axios.get('http://localhost:3002/auth/protect',{
-        headers : {
-          "Authorization" : `Bearer ${token}`, 
-        }
-      })
-      setAuthorizationMessage(res.data.msg);
-      console.log(res);
-    }
-    catch(err){
-      console.log(err);
-    }
-  }
-  useEffect(()=>{
-    isAuthorized();
-    isSellerAuthorized();
-  },[])
+  // const token = window.localStorage.getItem("token")
+  // const isAuthorized = async()=>{
+  //   try{
+  //   const res = await axios.get('http://localhost:9000/auth/isUserAuth',{
+  //     headers : {
+  //       "Authorization" : token,
+  //     }
+  //   })
+  //   setAuthorizationMessage(res.data.msg);
+  //   console.log(res);
+
+  // }
+  // catch(err){
+  //   console.log(err);
+  // }
+  // }
+  // const isSellerAuthorized = async()=>{
+  //   try{
+  //     const res = await axios.get('http://localhost:3002/auth/protect',{
+  //       headers : {
+  //         "Authorization" : `Bearer ${token}`, 
+  //       }
+  //     })
+  //     setAuthorizationMessage(res.data.msg);
+  //     console.log(res);
+  //   }
+  //   catch(err){
+  //     console.log(err);
+  //   }
+  // }
+  // useEffect(()=>{
+  //   isAuthorized();
+  //   isSellerAuthorized();
+  // },[])
   return (
     <>
     <BrowserRouter>
@@ -85,6 +86,8 @@ function App() {
             <Route path='/Storesearch' element={<Storesearch/>} />
             <Route path='/checkout-success' element={<Checkoutsuccess />} />
             <Route path='/user-cart/:userId' element={<Usercart/>} />
+            <Route path='/user-cart/:userId' element={<Usercart/>} />
+            <Route path='/user-cart/*' element={<Usercart/>} />
             <Route path='/checkout' element={<Checkoutlayout />}>
               <Route path = '/checkout' index element = {<Addresspage/>} />
               <Route path = '/checkout/paymentpage' element = {<Paymentpage/>} />

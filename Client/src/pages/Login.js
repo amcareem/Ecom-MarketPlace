@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 const Login = () => {
   const navigate = useNavigate();
   const{setLoginStatus,setUserInfo} = useGlobalContext();
-  const{authorizationMessage,setAuthorizationMessage} = useGlobalContext();
+  const{authorizationMessage,setAuthorizationMessage,getCartDetails} = useGlobalContext();
   const[user,setUser] = useState(
     {
       email:"",
@@ -23,23 +23,26 @@ const Login = () => {
   }
   const handleSubmit = async (event) => {
     event.preventDefault();
-    return await axios
+    const res1 =  await axios
       .post('http://localhost:9000/auth/login', user)
       .then((response) => {
         console.log(response.data);
-        // setUserInfo({
-        //   userId : response.data.user.user_id,
-        //   userName : response.data.user.user_name,
-        //   email : response.data.user.email,
-        //   accessToken : response.data.token
-
-        // })
         window.localStorage.setItem("token",response.data.token);
-        window.localStorage.setItem("userInfo",JSON.stringify(response.data.user));
+        // window.localStorage.setItem("userInfo",JSON.stringify(response.data.user));
+        setUser({
+          userId : response.data.user.user_id,
+          userName: response.data.user.user_name,
+          mobileNumber: response.data.user.mobile_number,
+          email: response.data.user.email,
+        })
         setAuthorizationMessage('authorized');
+
         navigate("/");
+        return response.data.user;
       })
       .catch((err) => console.log(err));
+      const res2 = await getCartDetails(res1.user_id);
+      console.log(res2);
   }
 
   return (

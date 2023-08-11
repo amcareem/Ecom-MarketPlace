@@ -49,7 +49,7 @@ export const login = async (req, res) => {
             var password_hash=rows[0]['password'];
             const isMatch = bcrypt.compare(password,password_hash);
             if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
-            const token = jwt.sign({ name: rows[0].user_name }, process.env.JWT_SECRET);
+            const token = jwt.sign({ name: rows[0].user_id }, process.env.JWT_SECRET);
             res.status(200).json({
                 msg:"login successfull",
                 token,
@@ -62,5 +62,17 @@ export const login = async (req, res) => {
     }
   };
 export const isAuthorized = async(req,res) =>{
-    res.status(200).json({msg:"authorized"});
+    const userId = req.user.name;
+    let user;
+    console.log(userId);
+    await db.query('SELECT * FROM user WHERE user_id = ?', [userId],(err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            user = result[0]
+            res.status(200).json({user,msg:"authorized"});
+        }
+    })
+    
 }

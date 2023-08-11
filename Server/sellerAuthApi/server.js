@@ -7,6 +7,8 @@ var userRouter = require("./routes/userRouters");
 var inventoryRouter = require("./routes/inventoryRouters");
 var onboardRouter = require("./routes/onBoard");
 var orderRouter = require("./routes/orderRouter");
+var shopStatRouter = require("./routes/shopStatRouter");
+
 var cors = require("cors");
 var app = express();
 
@@ -22,6 +24,7 @@ app.use("/auth", userRouter);
 app.use("/inventory", inventoryRouter);
 app.use("/onboard", onboardRouter);
 app.use("/order", orderRouter);
+app.use("/shopStat", shopStatRouter);
 //Error handling
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find the route ${req.url} on this server`, 404));

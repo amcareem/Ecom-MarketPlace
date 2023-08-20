@@ -62,17 +62,43 @@ export const login = async (req, res) => {
     }
   };
 export const isAuthorized = async(req,res) =>{
-    const userId = req.user.name;
-    let user;
-    console.log(userId);
-    await db.query('SELECT * FROM user WHERE user_id = ?', [userId],(err,result)=>{
-        if(err){
-            console.log(err);
-        }
-        else{
-            user = result[0]
-            res.status(200).json({user,msg:"authorized"});
-        }
-    })
+    try{
+        const userId = req.user.name;
+        let user;
+        console.log(userId);
+        await db.query('SELECT * FROM user WHERE user_id = ?', [userId],(err,result)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                user = result[0]
+                res.status(200).json({user,msg:"authorized"});
+            }
+        })
+    }
     
+    catch(err){
+        res.status(500).json({msg:err.message})
+    }
+}
+
+export const updateUser = async(req,res) =>{
+    try{
+        const userId = req.params.userId;
+        const updates = req.body;
+
+        const updateValue = Object.values(updates);
+
+        await db.query(`update user set ${Object.keys(updates)} = ? where user_id = ?`,[updateValue,userId],async(err,result)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                res.status(200).json({msg:'successfully updated'})
+            }
+        })
+    }
+    catch(err){
+        res.status(500).json({msg:err.message});
+    }
 }

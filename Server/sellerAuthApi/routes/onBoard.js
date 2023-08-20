@@ -102,6 +102,8 @@ router.get("/getProduct/:shopId", async (req, res) => {
         imagePath: path.join('..', 'assets', `${shopId}`, image.data.toString())
       }));
       const items = {
+        shopId : element.shopId,
+        shopName : element.shopName,
         productId: element._id,
         productName: element.productName,
         productDescription: element.productDescription,
@@ -125,6 +127,40 @@ router.get("/getProduct/:shopId", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+router.get("/getProductInfo/:productId",async(req,res) =>{
+  try{
+    const productId = req.params.productId;
+    const result = await productModel.findOne({_id:productId});
+    console.log(result);
+    const productImages = result.productImage.map((image) => ({
+      imagePath: path.join('..', 'assets', `${result.shopId}`, image.data.toString())
+    }));
+    const item = {
+      shopId : result.shopId,
+      shopName : result.shopName,
+      productId: result._id,
+      productName: result.productName,
+      productDescription: result.productDescription,
+      productPrice: result.productPrice,
+      productDescription: result.productDescription,
+      expectedDelivery: result.expectedDelivery,
+      expiryDate: result.expiryDate,
+      manufactureDate: result.manufactureDate,
+      brand: result.brand,
+      color: result.color,
+      gender: result.gender,
+      productImage: productImages,
+      isAvailable: result.isAvailable,
+      mainImagePath : path.join('..','assets',`${result.shopId}`,result.mainImage.data.toString()),
+  }
+  console.log(item);
+  res.status(200).json({item})
+}
+  catch(err){
+    res.status(500).json({err:err.message})
+  }
+})
 
 router.get("/", (req, res) => {
   res.send("API is working");

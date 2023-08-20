@@ -8,7 +8,7 @@ router.post('/addToCart',verifyToken,async (req,res)=>{
     console.log(req.body);
     const {productId,uuid,productName,productAmount,shopId,productImagePath,quantity} = req.body;
     try {
-        await db.query('INSERT INTO cart set ?',{productId : productId ,productName:productName, shopId: shopId, productAmount: productAmount,uuid : uuid, ImagePath : productImagePath,quantity :quantity},async(err,result)=>{
+        await db.query('INSERT INTO cart set ?',{productId : productId ,productName:productName, shopId: shopId, productAmount: productAmount,uuid : uuid, ImagePath : productImagePath, quantity :quantity},async(err,result)=>{
             if(err){
                 if(err.code === 'ER_DUP_ENTRY'){
                     res.status(409).json({error:'Already in the cart'})

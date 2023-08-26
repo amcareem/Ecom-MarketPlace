@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useGlobalContext } from '../components/context';
+import { motion } from 'framer-motion'
 
 const Login = () => {
   const navigate = useNavigate();
   const{setLoginStatus,setUserInfo} = useGlobalContext();
+  const{authorizationMessage,setAuthorizationMessage,getCartDetails} = useGlobalContext();
   const[user,setUser] = useState(
     {
       email:"",
@@ -21,34 +23,43 @@ const Login = () => {
   }
   const handleSubmit = async (event) => {
     event.preventDefault();
-    return await axios
+    const res1 =  await axios
       .post('http://localhost:9000/auth/login', user)
       .then((response) => {
         console.log(response.data);
-        // setUserInfo({
-        //   userId : response.data.user.user_id,
-        //   userName : response.data.user.user_name,
-        //   email : response.data.user.email,
-        //   accessToken : response.data.token
-
-        // })
         window.localStorage.setItem("token",response.data.token);
-        window.localStorage.setItem("loginStatus",true);
-        window.localStorage.setItem("userInfo",JSON.stringify(response.data.user));
+        // window.localStorage.setItem("userInfo",JSON.stringify(response.data.user));
+        setUser({
+          userId : response.data.user.user_id,
+          userName: response.data.user.user_name,
+          mobileNumber: response.data.user.mobile_number,
+          email: response.data.user.email,
+        })
+        setAuthorizationMessage('authorized');
+
         navigate("/");
+        return response.data.user;
       })
       .catch((err) => console.log(err));
+      const res2 = await getCartDetails(res1.user_id);
+      console.log(res2);
   }
 
   return (
     <>
-    <div className="bg-white h-screen flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        Log in to your accounut
-    </h2>
+    {(authorizationMessage === 'authorized')?
+    <div className='w-96 h-28 mx-auto mt-32 text-buttonColor rounded-lg bg-white font-semibold text-lg flex justify-center items-center'>You have already logged in...</div>:
+    <motion.div
+    initial={{opacity:0}}
+          animate={{opacity:1}}
+          transition={{ duration:0.4 ,type : ''}}
+    className="h-fit bg-white w-[70%] py-6 px-10 drop-shadow-lg rounded-lg">
+      <div className="">
+      <h2 className="text-center text-2xl font-bold leading-9 text-gray-900">
+          Log in as a buyer
+      </h2>
     </div>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="mt-10 ">
       <form onSubmit={handleSubmit} action="" className="space-y-6">
       <div>
           <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -85,7 +96,7 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-buttonColor px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
               </button>
@@ -94,13 +105,14 @@ const Login = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
-            <Link to='/Signup'><div className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            <Link to='/Roleselect'><div className="font-semibold leading-6 text-buttonColor">
               Create account
             </div>
             </Link>
           </p>
         </div>
-      </div>
+      </motion.div>
+}
     </>
   );
 };

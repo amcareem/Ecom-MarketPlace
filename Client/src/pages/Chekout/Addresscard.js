@@ -2,10 +2,12 @@ import axios from 'axios';
 import React from 'react'
 import { useGlobalContext } from '../../components/context';
 import { useState } from 'react';
-
+import Deleteaddressbutton from './Deleteaddressbutton';
+import Loading from '../../Images/Rolling.svg';
 const Addresscard = (props) => {
     const {userName,addressLine1,state,country,city,postalCode,mobileNumber,addressId,isDefault} = props;
-    const{defaultAddress,setDefaultAddress} = useGlobalContext();
+    const{userAddress,setUserAddress,defaultAddress,setDefaultAddress} = useGlobalContext();
+    const [isLoading,setLoading] = useState(false);
     const handleDefault = async() =>{
       return await axios
       .put(`http://localhost:9000/setDefaultAddress/${addressId}`,{
@@ -18,24 +20,21 @@ const Addresscard = (props) => {
       .catch((err)=>{
         console.log(err);
       })
-
     }
+    
   return (
     <>
-      <button onClick={()=>handleDefault()} className={`capitalize rounded-lg my-5 w-full h-20  bg-cardColor text-xl font-semibold flex flex-col px-5 justify-center ${(addressId === defaultAddress) ?'border-2 border-buttonColor shadow-md': ''}`}>
-        <div className='flex gap-1'>
-          <div className=''>{userName},</div>
-          <div className='font-medium text-lg'>{addressLine1},</div>
-          <div className='font-medium text-lg'>{postalCode}</div>
-        </div>
-        <div className='flex font-medium text-lg'>
-          <div>{city},</div>
-          <div>{state},</div>
-          <div>{country},</div>
-          <div>{mobileNumber}</div>
-        </div>
-        
-      </button>
+      <button onClick={()=>handleDefault()} className={`cursor-default focus:outline-none capitalize rounded-lg my-3 lg:my-5 w-full h-fit gap-1 flex flex-col px-5 pb-2 pt-1 lg:justify-center ${(addressId === defaultAddress) ?'bg-[#fafde7] border border-[#FFCF25]': 'border border-transparent bg-cardColor'}`}>
+      <div className='flex flex-col items-start text-start lg:flex-row gap-1'>
+        <div className='font-bold text-sm lg:text-xl lg:font-semibold'>{userName},</div>
+        <div className='font-medium text-xs lg:text-lg'>{addressLine1},PIN CODE: {postalCode}</div>
+      </div>
+      <div className='flex flex-col lg:flex-row font-medium text-start items-start text-xs lg:text-lg'>
+        <div>{city},{state},{country},{mobileNumber}</div>
+      </div>
+      <Deleteaddressbutton onClick={()=>setLoading(true)} onFetch={()=>setLoading(true)} addressId = {addressId}/>
+    </button>
+      
     </>
   )
 }

@@ -98,10 +98,24 @@ const Cartproductcard = (props) => {
 
   return (
     <>
-    <div className='border-1 h-40 border-white m-auto font-Inter capitalize rounded-lg bg-cardColor flex items-center gap-2 px-2 py-3 mb-2'>
-        <div className='w-3/12 pl-3'><img className='w-10/12' src={`http://localhost:3002/${props.productImagePath}`}/></div>
+    <div className='border-1 h-fit  border-white m-auto font-Inter capitalize rounded-lg bg-cardColor flex lg:items-center gap-2 pl-2 pr-1 lg:px-4  py-3 mb-2'>
+      <div className='flex flex-col gap-4 w-5/12 lg:w-3/12 mr-3 lg:mr-0'>
+        <div className=''><img className='py-1 w-full lg:w-11/12' src={`http://localhost:3002/${props.productImagePath}`}/></div>
+
+        {/* mobile button */}
+
+        <div className='lg:hidden flex gap-3 justify-center h-8 items-center'>
+            <div className=''>
+              <button onClick={()=>decreaseCount()} className='bg-white border border-slate-300 w-6 rounded-lg'>-</button>
+            </div>
+            <div className='bg-white border border-slate-300 w-9 h-7 text-center pt-[2px]'>{quantity}</div>
+            <div className=''><button onClick={()=>increaseCount()} className='bg-white border border-slate-300 w-6 rounded-lg'>+</button></div>
+              {/* <div><button onClick={handleBuynow} className='bg-buttonColor w-full h-10 rounded-md'>Buy Now</button></div> */}
+            
+          </div>
+        </div>
         <div className='flex flex-col gap-2 w-6/12 justify-start items-start'>
-          <div className='text-xl font-semibold'>{props.productName}</div>
+          <div className='text-md lg:text-xl font-semibold'>{props.productName}</div>
           <div className='text-xs font-medium'>
             Delivery by 12th january
           </div>
@@ -111,9 +125,12 @@ const Cartproductcard = (props) => {
           <div className=''>
             <div className='text-xl font-semibold'>₹{productAmount}</div>
           </div>
-          
+
+          {/* mobile button */}
+
+          <div className='lg:hidden'><button onClick={deleteFromCart} className='bg-white border-2 focus:border-red-700 border-red-700 text-red-700 w-36 text-sm lg:text-md lg:w-full h-8 lg:h-10 rounded-md'>Remove from cart</button></div>
         </div>
-        <div className='flex flex-col justify-around h-28 w-2/12 font-semibold'>
+        <div className='hidden lg:flex flex-col justify-around items-center h-28 w-3/12 font-semibold'>
           <div className='flex gap-3 justify-center h-8 items-center'>
             <div className=''>
               <button onClick={()=>decreaseCount()} className='bg-white border border-slate-300 w-6 rounded-lg'>-</button>
@@ -123,7 +140,7 @@ const Cartproductcard = (props) => {
               {/* <div><button onClick={handleBuynow} className='bg-buttonColor w-full h-10 rounded-md'>Buy Now</button></div> */}
             
           </div>
-          <div><button onClick={deleteFromCart} className='bg-white border-2 focus:border-red-700 border-red-700 text-red-700 w-full h-10 rounded-md'>Remove from cart</button></div>
+          <div className='hidden lg:block'><button onClick={deleteFromCart} className='bg-white border-2 focus:border-red-700 border-red-700 text-red-700 w-48 h-10 rounded-md'>Remove from cart</button></div>
         </div>
         
         {/* <div className='flex w-'>

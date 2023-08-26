@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-
+import db from "../connections/db.js";
 export const verifyToken = async(req,res,next) =>{
     try{
         let token = req.header("Authorization");
@@ -11,6 +11,7 @@ export const verifyToken = async(req,res,next) =>{
         }
 
         const verified = jwt.verify(token,process.env.JWT_SECRET);
+        
         req.user = verified;
         next();
     }

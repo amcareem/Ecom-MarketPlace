@@ -7,9 +7,8 @@ import razorpayRoutes from "./routes/razorpayCheckout.js"
 
 dotenv.config();
 const app = express();
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(express.json());
 
 export const instance = new Razorpay({
     key_id: 'rzp_test_tKErgxv1zhxPDM',
@@ -17,6 +16,7 @@ export const instance = new Razorpay({
 })
 app.use(stripeCheckoutRoutes);
 app.use(razorpayRoutes);
+
 
 app.get('/getApiKey', (req,res) =>{
     res.status(200).json({key: process.env.RAZORPAY_API_KEY})

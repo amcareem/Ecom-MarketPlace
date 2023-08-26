@@ -76,7 +76,7 @@ router.get('/getProduct/:shopId',async (req,res)=>{   // get data from shopId
     });
     
 
-    res.status(201).send(productArray);  
+    res.status(200).send(productArray);  
 
     
   } catch (error) {

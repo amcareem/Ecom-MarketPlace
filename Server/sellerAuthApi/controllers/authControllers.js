@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
 const { promisify } = require("util");
 var multer = require("multer");
-
+const userModel = require("../models/userModel")
+const path = require("path");
 //const connect =  require('../utils/dbConnection');
 const mongoose = require("mongoose");
 const { decode } = require("punycode");
@@ -123,6 +124,27 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getSellerInfo = async(req,res,next) =>{
+  try{
+    const shopId = req.params.shopId;
+    let result = await userModel.findOne({_id:shopId});
+    result = result.toObject();
+    const shopImagePath = path.join('..','assets',result.shopImage.data.toString());
+    delete result.password;
+    delete result.confirmPassword;
+    delete result.shopImage;
+    result.shopImagePath = shopImagePath;
+    console.log(result);
+    res.status(200).json({sellerInfo:result});
+  }
+  catch(err){
+    res.status(500).json({msg:err.message});
+  }
+}
+
+
+
 
 exports.protectRoutes = async (req, res, next) => {
   //Authorize user before alloewing access to protected routes

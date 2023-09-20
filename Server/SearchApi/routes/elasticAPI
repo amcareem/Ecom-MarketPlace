@@ -6,8 +6,8 @@ const { Client } = require('@elastic/elasticsearch')
 
     //connect to client api
     const client = new Client({
-        cloud: { id: '0f21e2a3203b46be8858efdea5e5cb0e:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDJiNmNkYmY0YTE4NTQwOWNhMGM1YzM4ZTQwOGEyNWJmJDdlMWYyYzdmMDlmNjRkMDZiZjA1NjY5YTM4MjIzNWFj' },
-        auth: { apiKey:  'WkRybkE0b0JKVDZzd1FJZDZXbE86YVk4eUVTWHBSV3F2QW9LOEpOTXMzQQ=='}
+        cloud: { id: '549d284770cd4a8780666ad91f306564:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJGI5MjBkZTJiNjJmNDQ2NDE5M2U2OWFiNWIxNzhlZjA3JDAwNzYzMTZkYTliZjQ0NzdhYTBhMjM1NTdkNTZhNzNk' },
+        auth: { apiKey:  'bWwwZlg0b0I4VzVwdzdoUGFZYXI6eEIzR01vb3hSRW0xdVlIN1ZGQnI1dw=='}
       })
       async function run (req,res,next) {
         console.log(req.body);
@@ -257,6 +257,112 @@ async function run1 (req,res,next) {
 
  }
 
+
+async function storeProducts (req,res,next) {
+  console.log(req.body);
+  try{
+    await client.index({
+      index: 'product-details',
+      document: {
+        productId : req.body.id,
+        productName : req.body.productName,
+        brand: req.body.brand,
+        color: req.body.color,
+      }
+    })
+    await client.indices.refresh({ index: 'shop-details' })
+  res.status(201).json({msg:'registered'})
+  }catch (error) {
+  res.send(error);
+  next();
+}
+}
+// async function storeProducts () {
+//       // 
+//       await client.index({
+//           index: 'product-details',
+//           document: {
+//             productId : '64d9cbbbda383a075bc36c58',
+//             productName : "nike airmax",
+//             brand : 'Nike',
+//             color : 'red'
+//           }
+//         })
+  
+  
+//       await client.index({
+//         index: 'product-details',
+//         document: {
+//           productId : '64e89a982f2a038066801069',
+//           productName : "nike bigtime ",
+//           brand : 'nike',
+//           color: 'red'
+//         }
+//       })
+
+  
+
+
+//   await client.indices.refresh({ index: 'product-details' })
+
+//   // Let's search!
+//   const result= await client.search({
+//     index: 'product-details',
+//     query: {
+//       match_phrase_prefix: {
+//           productName: 'nike airmax'
+//       }
+//     }
+//   })
+
+//   console.log(result.hits.hits)
+// }
+
+// storeProducts().catch(console.log)
+
+ async function productSearch(req,res,next) {
+
+  console.log('KJRiPJjvSs2OyxjK2LsBRw');
+    //Let's search!
+    try {
+         // here we are forcing an index refresh, otherwise we will not
+    // get any result in the consequent search
+        await client.indices.refresh({ index: 'product-details' })
+        const searchQuery =  req.body.query;
+        console.log(searchQuery)
+        const result= await client.search({
+          index: 'product-details',
+          body: {
+            query: {
+                bool: {
+                  should: [
+                    { "match_phrase_prefix": { "productName": { "query": searchQuery+"*"} } },
+                    { "match_phrase_prefix": { "color": {"query" : searchQuery+"*" } } },
+                    { "match_phrase_prefix": { "brand": {"query" : searchQuery+"*" } } },
+                    { "fuzzy": { "productName": { "value": searchQuery, "fuzziness": "auto" } } },
+                    { "match": { "color": { "query": searchQuery, "operator": "or" } } },
+                    { "match": { "brand": { "query": searchQuery, "operator": "or" } } },
+                    { "match": { "productName": { "query": searchQuery, "operator": "or" } } },
+                  ],
+                  minimum_should_match: 1
+                }
+              }
+            }
+        })
+        console.log(result.hits.hits);
+        res.send(result.hits.hits);
+        
+        next();
+      
+    } catch (error) {
+        res.send(error);    
+        next();
+    }
+
+ }
+
+
+
 router.post('/searchResult',run1,(req, res) =>{
   console.log("response sent")
   
@@ -265,5 +371,9 @@ router.get('/getAll',run2,(req,res)=>{
     console.log("hello");
     
 })
+router.post('/searchProduct',productSearch,(req, res) =>{
+  console.log("response sent")
+  
+});
 router.post('registerShop',run);
 module.exports = router;

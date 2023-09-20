@@ -1,6 +1,6 @@
 var mongoose =  require('mongoose');
-
-var productSchema = mongoose.Schema({
+const Schema = mongoose.Schema;
+var productSchema = new Schema({
     shopId: {
         type: String,
         required: true
@@ -38,9 +38,6 @@ var productSchema = mongoose.Schema({
         type: String,
         required:true
     },
-    size: {
-        type: String 
-    },
     expiryDate: {
         type: Date,
     },
@@ -57,9 +54,6 @@ var productSchema = mongoose.Schema({
         type: String 
     },
     category: {
-        type: String 
-    },
-    color: {
         type: String 
     },
     material: {
@@ -90,7 +84,11 @@ var productSchema = mongoose.Schema({
     },
     gender:{
         type:String
-    }
+    },
+    productType:{
+        type:String,
+        default:'main'
+    },
 });
 
 var productModel =  mongoose.model('productModel',productSchema);

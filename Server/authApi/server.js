@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 import db from "./connections/db.js";
 import cartRouter from "./routes/cartService.js";
 import addressRouter from './routes/userAddress.js';
+import OrderRouter from './routes/OrderService.js';
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ db.connect((err) =>{
 
 app.use("/auth",authRoutes);
 app.use("/cart",cartRouter);
+app.use("/order",OrderRouter);
 app.use(addressRouter);
 
 app.listen(process.env.PORT, ()=>{

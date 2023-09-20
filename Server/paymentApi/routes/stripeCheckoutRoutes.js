@@ -58,17 +58,20 @@ router.post('/webhook', express.raw({type: 'application/json'}) , async(request,
   response.status(200).end();
 });
 router.post("/create-checkout-session", async(req, res) => {
+  console.log(req.body.cartList);
   const cartProduct = req.body.cartList.map((item) =>{
     return {
       productId : item.productId,
       productPrice : item.productAmount,
       productQuantity : item.quantity,
+      expectedDelivery : item.expectedDelivery,
     }
   })
   const customer = await stripe.customers.create({
     metadata : { 
       userId : req.body.userId, 
-      productList : JSON.stringify(cartProduct) 
+      productList : JSON.stringify(cartProduct),
+
     }
   })
   const userId = req.body.userId;
@@ -124,77 +127,185 @@ const createPaymentEvent = async(id,customer) =>{
     }
 } 
  
-const fulfillOrder = async(session,customer) =>{
-  try{
+const fulfillOrder = (session, customer) => {
+  return new Promise(async (resolve, reject) => {
     const createTime = new Date();
     const productList = JSON.parse(customer.metadata.productList);
     console.log(productList);
-    await db.query('insert into payment_details set ?' ,
-    { 
-      payment_id : session.payment_intent , 
+
+    try {
+
+      await insertIntoPaymentDetails(session, createTime);
+      await updateUserPaymentEvent(session, createTime);
+      const orderTableValues = await insertIntoOrderDetails(session, customer, createTime);
+      await updatePaymentDetails(session, orderTableValues);
+      await deleteFromCart(customer.metadata.userId);
+      await insertOrderItems(productList, orderTableValues.id, createTime);
+
+      console.log('payment order created');
+      resolve(orderTableValues.id); // Resolve with the orderId
+    } catch (err) {
+      console.log(err);
+      reject(err); // Reject with the error
+    }
+  });
+};
+
+const insertIntoPaymentDetails = async (session, createTime) => {
+  await db.query('insert into payment_details set ?',
+    {
+      payment_id: session.payment_intent,
       total_price: session.amount_total / 100,
-      currency : session.currency,
-      checkout_id : session.id,
-      payment_status : session.payment_status,
-      payment_method : session.payment_method_types[0],
-      created_at : createTime,
-      modified_at : createTime
-    },async(err,res) =>{
+      currency: session.currency,
+      checkout_id: session.id,
+      payment_status: session.payment_status,
+      payment_method: session.payment_method_types[0],
+      created_at: createTime,
+      modified_at: createTime
+    });
+};
+
+const updateUserPaymentEvent = async (session, createTime) => {
+  await db.query('update user_payment_event set payment_status = ?, modified_at = ? where checkout_id = ?',
+    [session.payment_status, createTime, session.id]);
+};
+
+const insertIntoOrderDetails = async (session, customer, createTime) => {
+  const orderTableValues = {
+    id: uuidv4(),
+    user_id: customer.metadata.userId,
+    payment_id: session.payment_intent,
+    total_price: session.amount_total / 100,
+    created_at: createTime,
+    modified_at: createTime
+  };
+  await db.query('insert into order_details set ?', orderTableValues);
+  return orderTableValues;
+};
+
+const updatePaymentDetails = async (session, orderTableValues) => {
+  await db.query('update payment_details set order_id = ? where checkout_id = ?',
+    [orderTableValues.id, session.id]);
+};
+
+const deleteFromCart = async (userId) => {
+  await db.query('delete from cart where uuid = ?', userId);
+};
+
+const insertOrderItems = async (productList, orderId, createTime) => {
+  for (const item of productList) {
+    const orderItemValues = {
+      id: uuidv4(),
+      order_id: orderId,
+      product_id: item.productId,
+      quantity: item.productQuantity,
+      price: item.productPrice,
+      expected_delivery : item.expectedDelivery,
+      created_at: createTime,
+      modified_at: createTime
+    };
+    await db.query('insert into order_items set ?', orderItemValues);
+    console.log('successfully added order items');
+  }
+};
+
+router.post("/createCODorder",async(req,res)=>{
+  try{
+    const createTime = new Date();
+    const userId = req.body.userId;
+    const cartList = req.body.cartList;
+    const cartTotal = cartList.reduce((cartTotal,item) =>{
+      return item.productAmount + cartTotal;
+    })
+    await createCODsession(userId,createTime);
+    const orderId = await insertCODOrderDetails(userId,createTime,cartTotal);
+    await deleteFromCart(userId);
+    await insertCODOrderItems(cartList,orderId,createTime);
+    res.status(200).json({msg:'order done'});
+  }
+  catch(err){
+    res.status(500).json({msg:err.message});
+  }
+})
+
+const createCODsession = async(userId,createTime) =>{
+  try{
+
+    const query = 'INSERT INTO user_payment_event SET ?';
+    const values = {
+      checkout_id: uuidv4(),
+      user_id: userId,
+      provider: 'COD',
+      payment_status: 'not paid',
+      created_at: createTime,
+      modified_at: createTime 
+    };
+
+    await db.query(query, values, (error, results) => {
+      if (error) {
+        console.error('Error inserting payment event:', error);
+      } else {
+        console.log('Payment event inserted successfully:');
+      }
+    });
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({msg:err.message});
+  }
+} 
+const insertCODOrderDetails = async (userId, createTime,cartTotal) => {
+  try{
+      const orderTableValues = {
+      id: uuidv4(),
+      user_id: userId,
+      payment_id: 'not-paid',
+      total_price: cartTotal,
+      created_at: createTime,
+      modified_at: createTime
+    };
+    await db.query('insert into order_details set ?', orderTableValues,(err,res)=>{
       if(err){
         console.log(err);
       }
       else{
-        await db.query('update user_payment_event set payment_status = ?,modified_at = ? where checkout_id = ?',
-        [session.payment_status,createTime,session.id]);
-        const orderTableValues = {
-          id : uuidv4(),
-          user_id : customer.metadata.userId,
-          payment_id : session.payment_intent,
-          total_price : session.amount_total/100,
-          created_at : createTime,
-          modified_at : createTime
-        }
-        await db.query('insert into order_details set ?', orderTableValues ,async(err,res) =>{
+        console.log('added order details');
+      }
+    });
+    return orderTableValues.id;
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({msg:err.message});
+  }
+};
+
+const insertCODOrderItems = async (cartList, orderId, createTime) => {
+  try {
+    for (const item of cartList) {
+      const orderItemValues = {
+        id: uuidv4(),
+        order_id: orderId,
+        product_id: item.productId,
+        quantity: item.productAmount,
+        price: item.productAmount,
+        expected_delivery: item.expectedDelivery,
+        created_at: createTime,
+        modified_at: createTime,
+      };
+        await db.query('insert into order_items set ?', orderItemValues,(err,res)=>{
           if(err){
             console.log(err);
           }
           else{
-            await db.query('update payment_details set order_id = ? where checkout_id = ?',[orderTableValues.id,session.id]);
-            
-            for (const item of productList) {
-              const orderItemValues = {
-                  id: uuidv4(),
-                  order_id: orderTableValues.id,
-                  product_id: item.productId,
-                  quantity: item.productQuantity,
-                  price : item.productPrice,
-                  created_at : createTime,
-                  modified_at : createTime
-              };
-              await db.query('insert into order_items set ?', orderItemValues,(err,res) =>{
-                if(err){
-                  console.log(err);
-                }
-                else{
-                  console.log('successfullyadded order items');
-                }
-              });
+            console.log('Successfully added order items');
           }
-            
-            console.log('order successfully created');
-          }
-        })
-        console.log('payment order created');
-      }
-    })
-
-
+        });
+    }
+  } catch (err) {
+    console.error('Error processing order items:', err);
+    res.status(500).json({ msg: err.message });
   }
-  catch(err){
-    console.log(err);
-  }
-}
-
-
+};
 
 export default router;

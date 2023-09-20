@@ -1,5 +1,5 @@
 # Ecom-MarketPlace
-Name- Ecom-MarketPlace , this an website to shop from your nearby local store
+ Ecom-MarketPlace , this an website to shop from your nearby local store
 Home Page
 ![IMG-20230812-WA0007](https://github.com/Kokonodray2001/Ecom-MarketPlace/assets/64181896/c4a992fe-6c83-4f69-b523-d047f3886fc1)
 Registration Page

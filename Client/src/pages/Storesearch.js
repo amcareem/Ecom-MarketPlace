@@ -24,7 +24,7 @@ const Storesearch = () => {
   },[])
   const handleSearch = async (searchQuery) => {
     return await axios
-      .post('http://localhost:4000/api/searchResult', { query: searchQuery })
+      .post('http://52.203.150.188:4000/api/searchResult', { query: searchQuery })
       .then((response) => {
         setSearchStoreList(response.data);
         console.log(response.data);

@@ -15,15 +15,8 @@ const Usercart = () => {
    const {userId} = useParams();
    const{cartProductCounter,setCartProductCounter,cartTotalPrice,setCartTotalPrice} = useGlobalContext();
    const {cartList,setCartList,isAuthorized,authorizationMessage,isLoading} = useGlobalContext();
-   
-   const skeleton = ['1','2','3'];
+   const {cartLoading,setCartLoading} = useGlobalContext();
    const navigate = useNavigate();
-  //  useEffect(()=>{
-  //   setIsLoading(true)
-  //   setTimeout(()=>{
-  //     setIsLoading(false)
-  //   },1000)
-  //  },[])
    
   return (
     <>{
@@ -43,11 +36,11 @@ const Usercart = () => {
       </div>
       </div>
     </div>:
-      <div className='flex flex-col lg:flex-row justify-around mt-1 lg:mt-8 p-2 lg:p-8 font-Inter'>
+      <div className='bg-gray-100 flex flex-col lg:min-w-screen lg:min-h-screen lg:flex-row justify-around p-2 lg:p-4 lg:py-10 font-Inter'>
         <div className='block lg:hidden px-1'>
           <Carttotal />
         </div>
-        <div className='w-full lg:w-8/12  h-fit lg:border lg:border-slate-300 rounded-md lg:p-5'>
+        <div className='w-full lg:w-8/12  h-fit rounded-md'>
           {
             // isLoading ? 
             // skeleton.map((curr)=>{return <Skeletoncard />}):
@@ -65,9 +58,9 @@ const Usercart = () => {
           }
           </div>
           {
-            // isLoading?<div className='hidden lg:block w-3/12'><SkeletonCarttoal /></div>
-            // :
-            <div className='hidden lg:block w-3/12'>
+            cartLoading?<div className='hidden lg:block w-3/12'><SkeletonCarttoal /></div>
+            :
+            <div className='hidden lg:block w-[24%]'>
             <Carttotal />
             </div>
           }

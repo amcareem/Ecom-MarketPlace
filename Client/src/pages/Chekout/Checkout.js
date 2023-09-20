@@ -23,13 +23,13 @@ const Checkout = () => {
 
   const isActive = (currentPath,linkPath) => {
     return (currentPath === linkPath) ? 
-    'w-full h-full border lg:border-2 font-medium lg:font-semibold border-buttonColor flex justify-center items-center text-[10px] lg:text-lg bg-white text-buttonColor'
-    : 'w-full h-full font-medium lg:font-semibold flex justify-center items-center text-[10px] lg:text-lg bg-buttonColor text-white'
+    'w-full h-full border lg:border-[1.5px] font-medium lg:font-medium border-buttonColor flex justify-center items-center text-[10px] lg:text-base bg-white text-buttonColor'
+    : 'w-full h-full font-medium lg:font-medium flex justify-center items-center text-[10px] lg:text-base bg-buttonColor text-white'
   }
   return (
     <>
     <div className=''>
-     <ul className='relative font-Inter flex h-7 lg:h-12 justify-between gap-[1px]'>
+     <ul className='relative font-Inter flex h-7 lg:h-10 justify-between gap-[1px]'>
         <li className='w-4/12'><Link to='/checkout' className={isActive(location.pathname,'/checkout')}>Delivery Adress</Link></li>
         <li className='w-4/12'><Link to='/checkout/reviewpage'  className={isActive(location.pathname,'/checkout/reviewpage')}>Review items</Link></li>
         <li className='w-4/12'><Link to='/checkout/paymentpage' className={isActive(location.pathname,'/checkout/paymentpage')}>Payment Method</Link></li>

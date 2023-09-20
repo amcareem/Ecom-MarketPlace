@@ -8,7 +8,7 @@ import Storesearch from './pages/Storesearch';
 // import ForgotPassword from './pages/ForgotPassword';
 import Signup from './pages/Signup';
 import Shopproductpage from './pages/Shopproductpage';
-import Checkoutsuccess from './components/Checkoutsuccess';
+import Checkoutsuccess from './pages/Checkoutsuccess';
 import Usercart from './pages/Usercart';
 import Checkoutlayout from './pages/Chekout/Layout';
 import Checkout from './pages/Chekout/Checkout';
@@ -39,43 +39,17 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Notfound from './pages/Notfound';
 import { useGlobalContext } from './components/context';
+import ProfileLayout from './pages/User/Profile/ProfileLayout';
+import PersonalInfo from './pages/User/Profile/PersonalInfo';
+import OrderLayout from './pages/OrderPage/OrderLayout';
+import Orderdetails from './pages/OrderPage/Orderdetails';
+import Cancelledorder from './pages/OrderPage/Cancelledorder';
+import Successfulorder from './pages/OrderPage/Successfulorder';
+import Forgotpassword from './pages/Forgotpassword';
+import Otpverify from './pages/Otpverify';
+import Resetpassword from './pages/Resetpassword';
 // import UserCart from './pages/UserCart';
 function App() {
-  const {authorizationMessage,setAuthorizationMessage} = useGlobalContext();
-  // const token = window.localStorage.getItem("token")
-  // const isAuthorized = async()=>{
-  //   try{
-  //   const res = await axios.get('http://localhost:9000/auth/isUserAuth',{
-  //     headers : {
-  //       "Authorization" : token,
-  //     }
-  //   })
-  //   setAuthorizationMessage(res.data.msg);
-  //   console.log(res);
-
-  // }
-  // catch(err){
-  //   console.log(err);
-  // }
-  // }
-  // const isSellerAuthorized = async()=>{
-  //   try{
-  //     const res = await axios.get('http://localhost:3002/auth/protect',{
-  //       headers : {
-  //         "Authorization" : `Bearer ${token}`, 
-  //       }
-  //     })
-  //     setAuthorizationMessage(res.data.msg);
-  //     console.log(res);
-  //   }
-  //   catch(err){
-  //     console.log(err);
-  //   }
-  // }
-  // useEffect(()=>{
-  //   isAuthorized();
-  //   isSellerAuthorized();
-  // },[])
   return (
     <>
     <BrowserRouter>
@@ -85,19 +59,31 @@ function App() {
             <Route path ="/ShopProductPage/:shopId" element={<Shopproductpage/>}/>
             <Route path='/Storesearch' element={<Storesearch/>} />
             <Route path='/checkout-success' element={<Checkoutsuccess />} />
-            <Route path='/user-cart/:userId' element={<Usercart/>} />
+            <Route path='/user-profile' element={<ProfileLayout/>}>
+              <Route path='/user-profile' element={<PersonalInfo/>}/>
+            </Route>
             <Route path='/user-cart/:userId' element={<Usercart/>} />
             <Route path='/user-cart/*' element={<Usercart/>} />
-            <Route path='/checkout' element={<Checkoutlayout />}>
+            <Route path='/order-page' element={<OrderLayout/>}>
+              <Route path='/order-page' element={<Orderdetails/>}/>
+              <Route path='/order-page/cancelled-order' element={<Cancelledorder/>}/>
+              <Route path='/order-page/successful-order' element={<Successfulorder/>} />
+            </Route>
+          </Route>
+          <Route path='/checkout' element={<Checkoutlayout />}>
               <Route path = '/checkout' index element = {<Addresspage/>} />
               <Route path = '/checkout/paymentpage' element = {<Paymentpage/>} />
               <Route path = '/checkout/reviewpage' element = {<Reviewpage/>} />
-            </Route>
           </Route>
           <Route path='/Roleselect' element={<Roleselect />}/>
           <Route path ="/buyer-signup" element={<Buyer />}/>
           <Route path='/seller-signup' element={<Seller />} />
-          <Route path = '/loginpage' element = {<Loginpage/>} />
+          <Route path = '/loginpage' element = {<Loginpage/>}>
+            <Route path='/loginpage' element={<Login />} />
+            <Route path='/loginpage/forgot-password' element={<Forgotpassword />} />
+            <Route path='/loginpage/otp-verify' element={<Otpverify />} />
+            <Route path='/loginpage/reset-password' element={<Resetpassword />} />
+          </Route>
           <Route path='/seller-loginpage' element ={<Sellerloginpage />} />
           <Route path='/Loginrole' element = {<Loginrole />} />
 

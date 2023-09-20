@@ -7,7 +7,7 @@ import { useGlobalContext } from './context';
 const ProductCard = (props) => {
   // const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
   const token = window.localStorage.getItem("token");
-  const {cartList,user,setCartList,getCartDetails} = useGlobalContext();
+  const {cartList,user,setCartList,getCartDetails,getCartProductInfo} = useGlobalContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const [goToCart,setGoToCart] = useState(false);
@@ -55,20 +55,22 @@ const ProductCard = (props) => {
         setIsLoading(false);
       })
       const res2 = await getCartDetails(user.userId);
-      console.log(res2);
+      const res3 = await getCartProductInfo(res2);
+      setCartList(res3);
+      console.log(res3);
   }
   return (
     <>
-      <div className='border-1 h-fit border-white m-auto capitalize rounded-lg font-Inter bg-cardColor gap-4  flex pl-2 pr-1 lg:pr-4  py-3 mb-2'>
-        <div className='flex flex-col gap-2 w-5/12 lg:w-4/12 mr-3 lg:mr-0'>
-          <div className=' h-full flex justify-center items-center'><img className='w-full lg:w-11/12 min-h-full max-h-44' src={`http://localhost:3002/${props.productImagePath}`}/></div>
+      <div className='h-fit w-full capitalize  rounded-md font-Inter bg-white gap-4 flex justify-around mb-3 shadow pr-4'>
+        <div className='flex flex-col gap-2 w-[28%] rounded-l-md px-2 py-2 bg-gray-100'>
+          <div className=' h-full flex justify-center items-center '><img className='w-full min-h-full max-h-44' src={`http://localhost:3002/${props.productImagePath}`}/></div>
           <div className='lg:hidden w-full flex flex-col gap-2 justify-center text-sm text-white font-semibold'>
               <div><button className='bg-buttonColor w-full h-8 rounded-md'>Buy Now</button></div>
               <div><button onClick={handleAddtocart} className='bg-white border-2 border-buttonColor text-black w-full h-8 rounded-md'>Add to cart</button></div>
           </div>
         </div>
-        <div className='flex flex-col gap-2 w-6/12 justify-start items-start'>
-          <div className='text-md font-semibold lg:text-xl lg:font-semibold'>{props.productName}</div>
+        <div className='flex flex-col gap-2 w-[45%] justify-start items-start py-3'>
+          <div className='text-md font-semibold lg:text-lg lg:font-medium'>{props.productName}</div>
           {/* <div className='text-sm lg:text-md border border-black'>{props.productDescription}</div> */}
           <div className='text-md lg:text-base text-green-500 font-semibold'>{
           (isAvailable)?'In stock'
@@ -76,12 +78,12 @@ const ProductCard = (props) => {
           }
           </div>
           <div className=''>
-            <div className='text-xl font-semibold'>₹{props.productPrice}</div>
+            <div className='text-lg font-semibold'>₹{props.productPrice}</div>
           </div>
-          <div className='text-sm lg:text-md'>FREE <span className='font-semibold'>delivery by {props.expectedDelivery}</span></div>
-          <div className='text-sm lg:text-md '>Rating</div>
+          <div className='text-sm lg:text-sm'>FREE <span className='font-semibold'>delivery by {props.expectedDelivery}</span></div>
+          <div className='text-sm lg:text-sm '>Rating</div>
         </div>
-        <div className='w-3/12 hidden lg:flex flex-col gap-3 justify-center text-white font-semibold'>
+        <div className='w-[25%] hidden lg:flex flex-col gap-3 justify-center text-white font-semibold'>
             <div><button className='bg-buttonColor w-full h-10 rounded-md'>Buy Now</button></div>
             {
               (isLoading)?

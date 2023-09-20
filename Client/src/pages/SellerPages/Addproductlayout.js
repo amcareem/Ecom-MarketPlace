@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 const Addproductlayout = () => {
   return (
     <>
-    <div className='px-8 pt-10 pb-4 w-full h-fit'>
+    <div className='px-8 pt-10 w-full h-fit'>
       <div className='h-[25%]'>
         <Addproduct />
       </div>

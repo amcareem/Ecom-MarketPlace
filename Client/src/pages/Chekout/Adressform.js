@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../../components/context';
 
 const Addressform = ({onClose}) => {
-  const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-  const userId = userInfo.user_id;
-  const {userAddress,setUserAddress} = useGlobalContext();
+  // const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+  
+  const {userAddress,setUserAddress,user} = useGlobalContext();
+  const userId = user.userId;
   const [formData, setFormData] = useState({
     userId : userId,
     fullName: '',

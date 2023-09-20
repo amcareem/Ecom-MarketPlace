@@ -24,12 +24,12 @@ const Addresscard = (props) => {
     
   return (
     <>
-      <button onClick={()=>handleDefault()} className={`cursor-default focus:outline-none capitalize rounded-lg my-3 lg:my-5 w-full h-fit gap-1 flex flex-col px-5 pb-2 pt-1 lg:justify-center ${(addressId === defaultAddress) ?'bg-[#fafde7] border border-[#FFCF25]': 'border border-transparent bg-cardColor'}`}>
+      <button onClick={()=>handleDefault()} className={`cursor-default focus:outline-none capitalize rounded-sm shadow my-3 lg:my-5 w-full h-fit gap-1 flex flex-col px-5 pb-2 pt-1 lg:justify-center ${(addressId === defaultAddress) ?'bg-[#fafde7] border border-[#FFCF25]': 'border border-transparent bg-gray-100'}`}>
       <div className='flex flex-col items-start text-start lg:flex-row gap-1'>
-        <div className='font-bold text-sm lg:text-xl lg:font-semibold'>{userName},</div>
-        <div className='font-medium text-xs lg:text-lg'>{addressLine1},PIN CODE: {postalCode}</div>
+        <div className='font-bold text-sm lg:text-lg lg:font-semibold'>{userName},</div>
+        <div className='font-medium text-xs lg:text-base'>{addressLine1},PIN CODE: {postalCode}</div>
       </div>
-      <div className='flex flex-col lg:flex-row font-medium text-start items-start text-xs lg:text-lg'>
+      <div className='flex flex-col lg:flex-row font-medium text-start items-start text-xs lg:text-base'>
         <div>{city},{state},{country},{mobileNumber}</div>
       </div>
       <Deleteaddressbutton onClick={()=>setLoading(true)} onFetch={()=>setLoading(true)} addressId = {addressId}/>

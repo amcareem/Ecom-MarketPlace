@@ -50,14 +50,14 @@ const Sellernavigation = () => {
             </div>
             <div className='flex flex-col flex-1 justify-between'>
                 <div className='flex flex-col'>
-                    <div onClick={()=>handleClick()} className={`h-12 w-full px-8  flex items-center ${isActiveNormal(location.pathname,'/seller')}`}><Link to='/seller'>Dashboard</Link></div>
+                    <Link to='/seller'><div onClick={()=>handleClick()} className={`h-12 w-full px-8  flex items-center  ${isActiveNormal(location.pathname,'/seller')}`}>Dashboard</div></Link>
                     <div className=''>
-                        <div className='flex items-center h-12 gap-2 w-full px-8'onClick={()=>handleDropdownFirst()} >
-                        <Link to='/seller/productmanagement-page/product-details'><div  className={isActiveProduct(location.pathname)}>
+                      <Link to='/seller/productmanagement-page/product-details'><div className='flex items-center h-12 gap-2 w-full px-8'onClick={()=>handleDropdownFirst()} >
+                        <div  className={isActiveProduct(location.pathname)}>
                                 Product management
-                            </div></Link>
+                            </div>
                             <div className={isActiveProduct(location.pathname)}><ion-icon name="caret-down-outline"></ion-icon></div>
-                        </div>
+                        </div></Link>
                         <div className={isDropdownFirst ? 'px-6 flex w-full flex-col opacity-100 transition duration-150' : 'opacity-100 h-0 overflow-hidden'}>
                             <Link to='/seller/productmanagement-page/product-details'><div className={`h-10 w-full px-8  flex items-center ${isActiveNormal(location.pathname,'/seller/productmanagement-page/product-details')}`}>Product details</div></Link>
                             <Link to='/seller/productmanagement-page/edit-products'><div className={`h-10 w-full px-8  flex items-center ${isActiveNormal(location.pathname,'/seller/productmanagement-page/edit-products')}`}>Edit products</div></Link>
@@ -66,19 +66,20 @@ const Sellernavigation = () => {
                         </div>
                     </div>
                     <div className=''>
-                        <div className='flex items-center gap-4 h-12 w-full px-8 'onClick={()=>handleDropdownSecond()}>
-                            <Link to='/seller/ordermanagement-page/order-details'><div className={isActiveOrder(location.pathname)}>Order management</div></Link>
+                        <Link to='/seller/ordermanagement-page/order-details'><div className='flex items-center gap-4 h-12 w-full px-8 'onClick={()=>handleDropdownSecond()}>
+                            <div className={isActiveOrder(location.pathname)}>Order management</div>
                             <div className={isActiveOrder(location.pathname)}><ion-icon name="caret-down-outline"></ion-icon></div>
                         </div>
+                        </Link>
                         <div className={isDropdownSecond ? 'px-6 flex flex-col opacity-100 transition duration-150' : 'opacity-0 h-0 overflow-hidden'}>
                             <Link to='/seller/ordermanagement-page/order-details'><div className={`h-10 w-full px-8  flex items-center ${isActiveNormal(location.pathname,'/seller/ordermanagement-page/order-details')}`}>Order details</div></Link>
                             <Link to='/seller/ordermanagement-page/edit-orders'><div className={`h-10 w-full px-8  flex items-center ${isActiveNormal(location.pathname,'/seller/ordermanagement-page/edit-orders')}`}>Edit orders</div></Link>
                         </div>
                     </div>
-                    <div className='h-12 w-full px-8  flex items-center' onClick={()=>handleClick()}>Daily orders</div>
-                    <div onClick={()=>handleClick()} className='h-12 w-full px-8  flex items-center'>Order details</div>
-                    <div onClick={()=>handleClick()} className='h-12 w-full px-8  flex items-center'>Leaderboards</div>
-                    <div onClick={()=>handleClick()} className='h-12 w-full px-8  flex items-center'>Supplier management</div>
+                    <div className='h-12 w-full px-8  flex items-center ' onClick={()=>handleClick()}>Daily orders</div>
+                    <div onClick={()=>handleClick()} className='h-12 w-full px-8  flex items-center '>Order details</div>
+                    <div onClick={()=>handleClick()} className='h-12 w-full px-8  flex items-center '>Leaderboards</div>
+                    <div onClick={()=>handleClick()} className='h-12 w-full px-8  flex items-center '>Supplier management</div>
                 </div>
                 <div className='flex flex-col gap-1 pl-10 pr-4'>
                     <div>Help center</div>

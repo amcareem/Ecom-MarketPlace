@@ -22,7 +22,7 @@ const Deleteaddressbutton = ({addressId,onClick,onFetch}) => {
       }
   return (
     <>
-      <button onClick={handleClick} className='bg-buttonColor text-white w-40 lg:w-44 font-normal text-sm lg:text-base rounded-sm lg:rounded-md'>Delete this address</button>
+      <button onClick={handleClick} className='bg-buttonColor text-white w-40 lg:w-44 font-normal text-sm lg:text-base rounded-sm lg:rounded-md lg:mt-2'>Delete this address</button>
     </>
   )
 }

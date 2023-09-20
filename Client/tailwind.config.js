@@ -16,7 +16,7 @@ module.exports = {
       dropShadow:{
         'cartShadow':'0px 0px 7px rgba(40, 39, 39, 0.15)',
         'searchShadow':'0px 0px 7px rgba(40, 39, 39, 0.25)',
-        'cardShadow' : '0 4px 6px rgba(0, 0, 0, 0.2)',
+        'cardShadow' : '4px 6px 4px rgba(0, 0, 0, 0.05)',
         'roleSelectShadow':'0px 0px 7px rgba(40, 39, 39, 0.20)',
       },
       backgroundImage: (theme) => ({
@@ -48,14 +48,23 @@ module.exports = {
             transform: 'translateY(0)',
             // animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
           }
-        }
+        },
+        flip:{
+          '0%' :{
+              transform: 'rotateY(0)',
+            },
+            '100%': {
+              transform: 'rotateY(180deg)'
+            }
+          }
       },
       animation:{
         'slideIn' : 'slideIn 800ms ease-in-out forwards',
         'slideInBehind' : 'slideInBehind 850ms ease-in-out forwards',
         'slideNext' : 'slideNext 1s ease-in-out infinite',
         'slideFull' : 'slideFull 400ms linear forwards',
-        'bounceRoleSelect' : 'bounceRoleSelect 1s ease-in-out infinite'
+        'bounceRoleSelect' : 'bounceRoleSelect 1s ease-in-out infinite',
+        'flip' : 'flip 500ms ease-in-out forwards'
       },
       backgroundImage:{
         'signupSlideIn': "url('./Images/wave.png')", 

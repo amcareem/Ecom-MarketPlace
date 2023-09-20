@@ -8,9 +8,9 @@ import Addresscard from './Addresscard';
 
 const Addresspage = () => {
   const [isOpen,setIsOpen] = useState(false);
-  const {userAddress,setUserAddress,defaultAddress,setDefaultAddress} = useGlobalContext();
-  const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-  const userId = userInfo.user_id;
+  const {userAddress,setUserAddress,defaultAddress,setDefaultAddress,user} = useGlobalContext();
+  // const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+  const userId = user.userId;
   useEffect(()=>{
     getUserAddress();
   },[])

@@ -1,7 +1,9 @@
 import React,{useContext, useEffect, useState} from "react";
 import axios from 'axios';
-const AppContext = React.createContext();
+import env from "react-dotenv";
 
+
+const AppContext = React.createContext();
 const AppProvider = ({children}) => {
     const token = window.localStorage.getItem("token");
     const[storeList,setStoreList] = useState([]);
@@ -9,34 +11,52 @@ const AppProvider = ({children}) => {
     const[clickSearch,setClickSearch] = useState(false);
     const[searchQuery,setSearchQuery] = useState("");
     const[shopIdForProducts,setShopIdForProducts] = useState("");
-    const[productList,setProductList] = useState([]);
     const[loginStatus,setLoginStatus] = useState(false);
     const[cartProductCounter,setCartProductCounter] = useState(0);
     const[cartTotalPrice,setCartTotalPrice] = useState(0);
     const[userAddress,setUserAddress] = useState([]);
     const[defaultAddress,setDefaultAddress] = useState("");
     const[cartList,setCartList] = useState([]);
+    const[orderList,setOrderList] = useState([]);
     const[authorizationMessage,setAuthorizationMessage] = useState('');
     const[isLoading,setIsLoading] = useState(false)
+    const[cartLoading,setCartLoading] = useState(false);
+    const [isFormClicked,setFormClicked] = useState(false);
     const[user,setUser] = useState({
         userId : '',
         userName : '',
         mobileNumber : '',
         email : ''
-    })  
+    })
+    
+    // const awsURL ='localhost:9000';
+    // const localhostURL = 'localhost:9000';
+
+
+
     useEffect(()=>{
         setIsLoading(true);
         getUserDetails();
       },[])
       const getUserDetails = async() =>{
         try{
+            const res2 = getAll();
             const res1 = await isAuthorized();
             console.log(res1);
-            const res2 = await getCartDetails(res1.user_id);
-            console.log(res2);
-            setTimeout(()=>{
+            if(res1){
+              const res3 = await getCartDetails(res1.user_id);
+              const res4 = await getCartProductInfo(res3);
+              setCartList(res4);
+              console.log(res4);
+              const res5 = await getOrderDetails(res1.user_id);
+              setIsLoading(false);
+            }
+            else{
+              setTimeout(()=>{
                 setIsLoading(false);
             },1000)
+            }
+            
         }
         catch(err){
           setIsLoading(false)
@@ -45,7 +65,7 @@ const AppProvider = ({children}) => {
     }
     const isAuthorized = async()=>{
         try{
-        const res = await axios.get('http://localhost:9000/auth/isUserAuth',{
+        const res = await axios.get(`http://localhost:9000/auth/isUserAuth`,{
           headers : {
             "Authorization" : window.localStorage.getItem("token"),
           }
@@ -71,7 +91,6 @@ const AppProvider = ({children}) => {
               }
         })
         .then((res) =>{
-            setCartList(res.data);
             cartTotal(res.data);
             return res.data
         })
@@ -88,12 +107,131 @@ const AppProvider = ({children}) => {
         })
         setCartProductCounter(totalQuantity);
         setCartTotalPrice(totalPrice);
-        window.localStorage.setItem("totalQuantity",JSON.stringify(totalQuantity));
-        window.localStorage.setItem("totalPrice",JSON.stringify(totalPrice));
        }
+
+       const getAll = async() => {
+        return await axios
+          .get('http://localhost:4000/api/getAll')
+          .then((response) => {
+            setStoreList(response.data);
+            console.log(response.data);
+          })
+          .catch((err) => console.log(err));
+        
+      }
+      const getCartProductInfo = async(cartList) =>{
+        try {
+          const productInfoPromises = cartList.map(async (item) => {
+            const response = await axios.get(`http://localhost:3002/onboard/getProductInfo/${item.productId}`);
+            return {
+              ...item,
+              expectedDelivery: calculateExpectedDelivery(response.data.item.expectedDelivery),
+            };
+          });
+          const updatedCartList = await Promise.all(productInfoPromises);
+      
+          return updatedCartList;
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
+      const getOrderDetails = async(userId)=>{
+        try{
+          const res = await axios.get(`http://localhost:9000/order/getOrderDetails/${userId}`);
+          console.log(res);
+          if(res.data.orderItems){
+            const res2 = await getOrderProductInfo(res.data.orderItems);
+            setOrderList(res2);
+            console.log(res2);
+          }
+          else{
+            setOrderList([]);
+          }
+          
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
+
+      const getOrderProductInfo = async(orderList)=>{
+        try {
+          const productInfoPromises = orderList.map(async (item) => {
+            const res = await axios.get(`http://localhost:3002/onboard/getProductInfo/${item.product_id}`);
+            return {
+              ...item,
+              productName: res.data.item.productName,
+              shopName : res.data.item.shopName,
+              mainImagePath : res.data.item.mainImagePath
+            };
+          });
+          const updatedOrderList = await Promise.all(productInfoPromises);
+      
+          return updatedOrderList;
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
+
+       const calculateExpectedDelivery = (expectedDelivery) => {
+        if (expectedDelivery) {
+          const input = expectedDelivery.toLowerCase();
+          const numericValue = parseInt(input);
+          if (!isNaN(numericValue)) {
+            if (input.includes('hour') || input.includes('hours')) {
+              const deliveryDate = new Date();
+              deliveryDate.setHours(deliveryDate.getHours() + numericValue);
+              // Get the day of the month
+              const dayOfMonth = deliveryDate.getDate();
+              // Get the month name
+              const monthName = deliveryDate.toLocaleString('en-US', { month: 'long' });
+              // Create the formatted date string
+              const formattedDate = `${dayOfMonth}${getDayOrdinalSuffix(dayOfMonth)} ${monthName}`;
+              // Get the time part of the delivery date
+              const time = deliveryDate.toLocaleTimeString('en-US', { timeStyle: 'short' });
+              // Combine the formatted date and time
+              const formattedDateTime = `${formattedDate}, ${time}`;
+              return formattedDateTime;
+            } else if (input.includes('day') || input.includes('days')) {
+              const deliveryDate = new Date();
+              deliveryDate.setDate(deliveryDate.getDate() + numericValue);
+              // Get the day of the month
+              const dayOfMonth = deliveryDate.getDate();
+              // Get the month name
+              const monthName = deliveryDate.toLocaleString('en-US', { month: 'long' });
+              // Create the formatted date string
+              const formattedDate = `${dayOfMonth}${getDayOrdinalSuffix(dayOfMonth)} ${monthName}`;
+              // Get the time part of the delivery date
+              const time = deliveryDate.toLocaleTimeString('en-US', { timeStyle: 'short' });
+              // Combine the formatted date and time
+              const formattedDateTime = `${formattedDate}, ${time}`;
+              return formattedDateTime;
+            }
+          }
+        }
+        return '';
+      };
+      const getDayOrdinalSuffix = (day) => {
+        if (day >= 11 && day <= 13) {
+          return 'th';
+        }
+        switch (day % 10) {
+          case 1:
+            return 'st';
+          case 2:
+            return 'nd';
+          case 3:
+            return 'rd';
+          default:
+            return 'th';
+        }
+      };
     return <AppContext.Provider 
-    value={{getCartDetails,user,setUser,authorizationMessage,setAuthorizationMessage,storeList,setStoreList,productList,setProductList,loginStatus,setLoginStatus,cartList,setCartList,searchQuery,setSearchQuery,searchStoreList,setSearchStoreList,cartProductCounter,setCartProductCounter,cartTotalPrice,setCartTotalPrice
-    ,userAddress,setUserAddress,defaultAddress,setDefaultAddress,isLoading,setIsLoading}}>
+    value={{getCartDetails,getCartProductInfo,getOrderDetails,user,setUser,authorizationMessage,setAuthorizationMessage,storeList,setStoreList,loginStatus,setLoginStatus,cartList,setCartList,searchQuery,setSearchQuery,searchStoreList,setSearchStoreList,cartProductCounter,setCartProductCounter,cartTotalPrice,setCartTotalPrice
+    ,userAddress,setUserAddress,defaultAddress,setDefaultAddress,isLoading,setIsLoading
+    ,calculateExpectedDelivery,cartLoading,setCartLoading,isFormClicked,setFormClicked,orderList,setOrderList}}>
         {children}
     </AppContext.Provider>  
 }

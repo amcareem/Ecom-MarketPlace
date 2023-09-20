@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useGlobalContext } from '../../components/context';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Paymentpage = () => {
   const [selectedOption, setSelectedOption] = useState('');
-  const cartList = JSON.parse(localStorage.getItem('cartList'));
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  const userId = userInfo.user_id;
+  const {user,cartList,cartTotalPrice,setCartList,setIsLoading} = useGlobalContext();
+  const userId = user.userId;
+  const navigate = useNavigate();
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
@@ -16,7 +17,7 @@ const Paymentpage = () => {
     
     if (selectedOption === 'razorpayUPI') {
       try{
-        const totalAmount = JSON.parse(localStorage.getItem('totalPrice'));
+        const totalAmount = cartTotalPrice;
         const {data:{key}} = await axios.get('http://localhost:7000/getApiKey');
         const response = await axios.post("http://localhost:7000/razorpayCheckout",{
           totalAmount : totalAmount
@@ -56,25 +57,42 @@ const Paymentpage = () => {
             cartList: cartList,
             userId : userId
           })
-          if(res.data.url){
-            window.open(res.data.url, "_blank");
+          if(res.data.session.url){
+            window.location = res.data.session.url;
           }
+          setCartList(null);
         }
         catch(err){
           console.log(err);
       }
       }
+      else if(selectedOption === 'cashOnDelivery'){
+        setIsLoading(true);
+        try{
+          const res = await axios.post("http://localhost:7000/createCODOrder",{
+            cartList: cartList,
+            userId:userId
+          })
+          console.log(res);
+          setCartList([]);
+          setTimeout(()=>{
+            setIsLoading(false);
+          },1000)
+          navigate('/checkout-success');
+        }
+        catch(err){
+          console.log(err);
+        }
+        
+      }
   };
-  const handlePayment = async () => {
-   
-    } 
   return (
     <>
     <div className="font-Inter">
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className={`flex items-center w-full h-16 rounded-lg  px-4 ${
-              selectedOption === 'razorpayUPI' ? 'bg-[#E8EBFF] border border-buttonColor' : 'border border-transparent bg-cardColor'
+          <label className={`flex items-center w-full lg:h-16 h-10 font-medium rounded-md  px-4 text-sm lg:text-base ${
+              selectedOption === 'razorpayUPI' ? 'bg-[#E8EBFF] border border-buttonColor' : 'border border-gray-200 bg-gray-50'
             }`}>
             <input
               type="radio"
@@ -82,14 +100,14 @@ const Paymentpage = () => {
               value="razorpayUPI"
               checked={selectedOption === 'razorpayUPI'}
               onChange={handleOptionChange}
-              className="mr-2"
+              className="mr-2 "
             />
             UPI/Credit/Debit/ATM(RAZORPAY)
           </label>
         </div>
         <div className="mb-4">
-          <label className={`flex items-center w-full h-16 rounded-lg  px-4  ${
-              selectedOption === 'stripe' ? 'bg-[#E8EBFF] border border-buttonColor' : 'border border-transparent bg-cardColor'
+          <label className={`flex items-center w-full lg:h-16 h-10 font-medium rounded-md  px-4 text-sm lg:text-base ${
+              selectedOption === 'stripe' ? 'bg-[#E8EBFF] border border-buttonColor' : 'border border-gray-200 bg-gray-50'
             }`}>
             <input
               type="radio"
@@ -103,8 +121,8 @@ const Paymentpage = () => {
           </label>
         </div>
         <div className="mb-4">
-          <label className={`flex items-center w-full h-16 rounded-lg  px-4  ${
-              selectedOption === 'cashOnDelivery' ? 'bg-[#E8EBFF] border border-buttonColor' : 'border border-transparent bg-cardColor'
+          <label className={`flex items-center w-full lg:h-16 h-10 font-medium rounded-md  px-4 text-sm lg:text-base ${
+              selectedOption === 'cashOnDelivery' ? 'bg-[#E8EBFF] border border-buttonColor' : 'border border-gray-200 bg-gray-50'
             }`}>
             <input
               type="radio"
@@ -117,13 +135,23 @@ const Paymentpage = () => {
             Cash on delivery
           </label>
         </div>
-        <div>
+        <div className='lg:flex lg:justify-center'>
+          {(selectedOption === 'cashOnDelivery')?
+          <button
+          type="submit"
+          className="bg-buttonColor hover:bg-blue-700 text-white  font-normal leading-4 lg:font-medium  py-2 mt-4 px-6 lg:px-10 lg:py-3 text-lg rounded"
+        >
+          CONFIRM ORDER
+        </button>:
+        (selectedOption === 'stripe' || selectedOption === 'razorpayUPI')?
           <button
             type="submit"
-            className="bg-buttonColor hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-buttonColor hover:bg-blue-700 text-white lg:tracking-wide font-normal leading-5 lg:font-medium py-2 mt-4 px-6 lg:px-10 lg:py-3 text-lg rounded"
           >
-            Proceed to Payment
-          </button>
+            PAY ₹{cartTotalPrice}
+          </button>:
+          ''
+          }
         </div>
       </form>
     </div>

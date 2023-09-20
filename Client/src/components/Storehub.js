@@ -13,26 +13,13 @@ import "../App.css";
 
 const Storehub = () => {
     const {storeList,setStoreList} = useGlobalContext();
-    useEffect(() =>{
-      getAll();
-    },[])
-    const getAll = async() => {
-        return await axios
-          .get('http://localhost:4000/api/getAll')
-          .then((response) => {
-            setStoreList(response.data);
-            console.log(response.data);
-          })
-          .catch((err) => console.log(err));
-        
-      }
+    
   return (
     <>
-      <div className='bg-white w-11/12 h-72 md:h-[22rem] rounded-lg lg:w-10/12 m-auto lg:h-96 lg:pt-3 lg:px-2'>
       <Swiper
         freeMode={true}
         autoplay={{
-          delay: 2500,
+          delay: 4000,
           disableOnInteraction: false,
         }}
         pagination={{
@@ -60,7 +47,7 @@ const Storehub = () => {
           }
         }}
        
-        className="mySwiper rounded-md w-full h-full ml-auto mr-auto"
+        className="mySwiper rounded-sm w-full h-full"
       >
         {
           storeList.filter((curr,idx) => idx < 12).map((currStore) =>{
@@ -68,7 +55,7 @@ const Storehub = () => {
           })
         }
         </Swiper>
-        </div>
+
     </>
   )
 }

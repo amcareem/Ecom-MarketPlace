@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 const Storecard = (props) => {
   return (
     <>
-      <div className="font-Inter flex flex-col bg-cardColor w-11/12 p-1 md:p-4 h-11/12 mx-2 mt-2  overflow-hidden rounded-lg shadow-md md:shadow-lg">
+      <div className="font-Inter flex flex-col  bg-white w-11/12 p-1 md:p-4 h-11/12 mx-2 mt-2  overflow-hidden rounded-lg  shadow-lg ">
       {/* <img className="object-cover w-full h-48" src={store} alt="Product Image" /> */}
         <div className="text-gray-900 font-medium text-sm md:text-lg capitalize h-11 md:h-9">{props.storeName}</div>
         <div className="text-gray-700 text-xs md:text-sm h-3/12">Hardware shop</div>

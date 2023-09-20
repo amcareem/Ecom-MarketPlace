@@ -7,25 +7,37 @@ import { useGlobalContext } from '../context';
 
 const Navbar = () => {
     const[open,setOpen] = useState(false);
-    const {user,cartProductCounter} = useGlobalContext();
+    const {user,cartProductCounter,cartList} = useGlobalContext();
     const userId = user.userId;
-    // if(userInfo){
-    //     var uuid = userInfo.user_id;
-    // }
     const handleClick = ()=>{
         setOpen(!open);
     }
     open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto'
   return (
     <>
-     <div className='font-Inter font-semibold w-full flex h-20 px-2 lg:pr-5 lg:pl-8 bg-navColor justify-between text-white items-center'>
-        <h1 className='text-xl hidden lg:block'><Link to='/'>Ecommerce</Link></h1>
-        <div className= 'w-10/12 lg:w-5/12'><Searchbar/></div>
-        <ul className='hidden lg:flex text-md justify-center items-center'>
-            <li className='px-4'><Link to='/'>Home</Link></li>
-            <li className='px-4'>Orders</li>
-            <li className='px-4'><Link to={`/user-cart/${userId}`}>Cart({cartProductCounter})</Link></li>
-            <li className='px-4'><Myaccount/></li>
+     <div className='font-Inter font-semibold w-full flex h-20 px-2 lg:pr-8 lg:pl-8 bg-navColor justify-between text-white items-center'>
+        <h1 className='text-xl hidden lg:w-[12%] lg:block'><Link to='/'>Ecommerce</Link></h1>
+        <div className= 'w-10/12 lg:w-[45%]'><Searchbar/></div>
+        <ul className='lg:w-[30%] hidden lg:flex font-size-[20px] font-medium justify-around items-center tracking-wide'>
+            {/* <li className='px-4'><Link to='/'>Home</Link></li> */}
+            <li className=''><Link to='/order-page'>
+                <div className='flex items-center gap-2 cursor-pointer'>
+                <div className='pt-1'><ion-icon style={{fontSize:'20px'}} name="bag-outline"></ion-icon></div>
+                <div>Orders</div>
+                </div>
+                </Link>
+                </li>
+            <li className=''><Myaccount/></li>
+            <li className='relative'><Link to={`/user-cart/${userId}`}>
+                <div className='flex justify-center items-center gap-1'>
+                <div className='pt-1'><ion-icon style={{fontSize:'30px'}} name="cart-outline"></ion-icon></div>
+                <div>Cart</div>
+            {
+                (cartList.length === 0) ?''
+                :<div className='absolute top-[1px] -right-[15px] z-50 bg-red-500 w-[18px] h-[18px] rounded-full flex justify-center items-center text-xs pr-[0.1px]'>{cartProductCounter}</div>
+            }
+            </div></Link></li>
+            
             
         </ul>
 

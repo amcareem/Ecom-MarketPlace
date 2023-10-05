@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../utils/SqlConnection.js';
+import axios from 'axios';
 dotenv.config();
 
 const router = express.Router();
@@ -141,7 +142,7 @@ const fulfillOrder = (session, customer) => {
       await updatePaymentDetails(session, orderTableValues);
       await deleteFromCart(customer.metadata.userId);
       await insertOrderItems(productList, orderTableValues.id, createTime);
-
+      await updateInventoryOnInventoryServer(productList);
       console.log('payment order created');
       resolve(orderTableValues.id); // Resolve with the orderId
     } catch (err) {
@@ -308,4 +309,29 @@ const insertCODOrderItems = async (cartList, orderId, createTime) => {
   }
 };
 
+
+const updateInventoryOnInventoryServer = async (productList) => {
+  try {
+    const inventoryServerURL = 'http://localhost:3002/inventory/updateInventory';
+    const productPromises =  productList.map(async(item) => {
+      try{
+        const data = {
+          productId : item.productId,
+          productQuantity : item.productQuantity
+        }
+        const res = await axios.post(inventoryServerURL, data);
+        return res;
+      } 
+      catch(err){
+        res.status(500).json({msg: err.message})
+      }  
+
+    })
+    const res = await Promise.all(productPromises);
+    console.log(res);
+  } catch (error) {
+    console.error('Error updating inventory:', error);
+    res.status(500).json({msg: err.message})
+  }
+};
 export default router;

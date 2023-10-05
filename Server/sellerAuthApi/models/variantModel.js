@@ -41,12 +41,6 @@ const variantSchema = new Schema({
         type: String,
         required:true
     },
-    expiryDate: {
-        type: Date,
-    },
-    manufactureDate: {
-        type: Date 
-    },
     expectedDelivery: {
         type: String,
     },
@@ -96,6 +90,9 @@ const variantSchema = new Schema({
         data:Buffer,
         contentType:String,
     },
+    size:{
+        type:String
+    }
 })
 var variantModel =  mongoose.model('variantModel',variantSchema);
 module.exports = variantModel;

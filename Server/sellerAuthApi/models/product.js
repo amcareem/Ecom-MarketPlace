@@ -18,6 +18,12 @@ var productSchema = new Schema({
         contentType:String,
         // required:true
     },
+    variantName:{
+        type: String,
+    },
+    variantType:{
+        type: String,
+    },
     productImage:[{
         data:Buffer,
         contentType:String
@@ -37,12 +43,6 @@ var productSchema = new Schema({
     productPrice: {
         type: String,
         required:true
-    },
-    expiryDate: {
-        type: Date,
-    },
-    manufactureDate: {
-        type: Date 
     },
     expectedDelivery: {
         type: String,
@@ -89,6 +89,9 @@ var productSchema = new Schema({
         type:String,
         default:'main'
     },
+    size:{
+        type:String,
+    }
 });
 
 var productModel =  mongoose.model('productModel',productSchema);

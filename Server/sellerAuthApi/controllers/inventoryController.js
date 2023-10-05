@@ -17,26 +17,41 @@ exports.getQuant = async (req,res,next)=>{
 }
 
 exports.addItem = async (req,res,next)=>{
-try {
-const productInventory =  await InventoryModel.create(req.body);
-res.send(productInventory);
-} catch (error) {
-    next(error)
-}
-}
-
-exports.updateQuantity = async (req,res,next)=>{
     try {
-        const filter = {productId : req.body.productId};
-        const update= {quantity : req.body.quantity};
-        const result = await InventoryModel.findOneAndUpdate(filter,update,{ new: true });
-        if(result)
-            res.send(result);
-        else
-            throw new AppError("quantity not changed",401);
+        const newInventoryItem = new InventoryModel({
+          productId: req.body.productId,
+          shopId: req.body.shopId,
+          quantity: req.body.quantity,
+        });
+    
+        await newInventoryItem.save();
+    
+        res.status(201).json({ message: 'Product data stored in inventory successfully' });
+      } catch (error) {
+        console.error('Error storing product data in inventory:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+};
+
+exports.updateInventory = async (req, res, next) => {
+    try {
+      const productId = req.body.productId;
+      const purchasedQuantity = req.body.productQuantity;
+
+      const inventoryItem = await InventoryModel.findOne({ productId });
+  
+      if (!inventoryItem) {
+        return res.status(404).json({ message: 'Inventory item not found' });
+      }
+      inventoryItem.quantity -= purchasedQuantity;
+  
+      // Save the updated inventory item
+      await inventoryItem.save();
+  
+      res.status(200).json({ message: 'Quantity updated successfully', updatedInventoryItem: inventoryItem });
     } catch (error) {
-        next(error)
+      next(error);
     }
-}
+  };
 
 

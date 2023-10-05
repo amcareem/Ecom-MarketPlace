@@ -6,8 +6,8 @@ const { Client } = require('@elastic/elasticsearch')
 
     //connect to client api
     const client = new Client({
-        cloud: { id: '549d284770cd4a8780666ad91f306564:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJGI5MjBkZTJiNjJmNDQ2NDE5M2U2OWFiNWIxNzhlZjA3JDAwNzYzMTZkYTliZjQ0NzdhYTBhMjM1NTdkNTZhNzNk' },
-        auth: { apiKey:  'bWwwZlg0b0I4VzVwdzdoUGFZYXI6eEIzR01vb3hSRW0xdVlIN1ZGQnI1dw=='}
+        cloud: { id: 'My_deployment:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJGJiMDljMjU2OTNlODRlZDBiNmU1YmQwZjg5ZDg4MDUzJDYxMjBhNjU5Y2Q0ZjQzNmY5MzhiMDdmMmMwYThmNzAx' },
+        auth: { apiKey:  'OG83QnU0b0JZTE1JZE9aNVdxejY6clVnaVlDcmRSMXllem9YSDVhZ2hKZw=='}
       })
       async function run (req,res,next) {
         console.log(req.body);

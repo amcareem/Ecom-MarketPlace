@@ -68,7 +68,22 @@ router.put('/setDefaultAddress/:id' ,async(req,res) =>{
         res.status(500).json({msg:"internal server error"});
     }
 })
-
+router.get('/getDefaultAddress/:id', async(req,res) =>{
+    const userId = req.params.id;
+    try{
+        await db.query('select * from user_address where user_id = ? and is_default = ?',[userId,true],(err,address)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                res.status(200).send({defaultAddress : address});
+            }
+        })
+    }
+    catch(err){
+        res.status(500).json({err:err.message});
+    }
+})
 router.delete('/deleteUserAddress/:addressId', async(req, res) => {
     const { addressId } = req.params;
     // console.log(addressId);

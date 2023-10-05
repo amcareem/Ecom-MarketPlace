@@ -133,7 +133,7 @@ router.post('/storeProductVariant',(req,res)=>{
       try {
         newProduct.save().then(async()=>{
           console.log("saved");
-          const inventoryItem = new InventoryModel({
+          const inventoryItem = new inventoryModel({
             productId: savedProduct._id,
             shopId: savedProduct.shopId,
             quantity: req.body.productAmount, // Set the initial quantity to 0 or an appropriate value

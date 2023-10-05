@@ -60,6 +60,7 @@ router.post('/webhook', express.raw({type: 'application/json'}) , async(request,
 });
 router.post("/create-checkout-session", async(req, res) => {
   console.log(req.body.cartList);
+  const shippingAddress = req.body.shippingAddress;
   const cartProduct = req.body.cartList.map((item) =>{
     return {
       productId : item.productId,
@@ -94,6 +95,19 @@ router.post("/create-checkout-session", async(req, res) => {
     customer:customer.id,
     success_url: `${process.env.CLIENT_URL}/checkout-success`,
     cancel_url: `${process.env.CLIENT_URL}/`,
+    shipping_address_collection: {
+      allowed_countries: ["US", "IN"], // Specify the allowed countries for shipping
+      phone: shippingAddress.phone, // Include phone number
+      address: {
+        city: shippingAddress.city,
+        country: shippingAddress.country,
+        line1: shippingAddress.address_line1,
+        line2: shippingAddress.address_line2,
+        postal_code: shippingAddress.postal_code,
+        state: shippingAddress.state,
+      },
+      name: shippingAddress.full_name, // Include name
+    },
   });
   console.log(session);
   createPaymentEvent(session.id,customer);
@@ -135,7 +149,7 @@ const fulfillOrder = (session, customer) => {
     console.log(productList);
 
     try {
-
+      const shippingAddress = session.shipping;
       await insertIntoPaymentDetails(session, createTime);
       await updateUserPaymentEvent(session, createTime);
       const orderTableValues = await insertIntoOrderDetails(session, customer, createTime);
@@ -143,6 +157,7 @@ const fulfillOrder = (session, customer) => {
       await deleteFromCart(customer.metadata.userId);
       await insertOrderItems(productList, orderTableValues.id, createTime);
       await updateInventoryOnInventoryServer(productList);
+      await addOrder(productList,shippingAddress);
       console.log('payment order created');
       resolve(orderTableValues.id); // Resolve with the orderId
     } catch (err) {
@@ -215,13 +230,24 @@ router.post("/createCODorder",async(req,res)=>{
     const createTime = new Date();
     const userId = req.body.userId;
     const cartList = req.body.cartList;
+    const shippingAddress = req.body.shippingAddress;
     const cartTotal = cartList.reduce((cartTotal,item) =>{
       return item.productAmount + cartTotal;
+    })
+    const productList = req.body.cartList.map((item) =>{
+      return {
+        productId : item.productId,
+        productPrice : item.productAmount,
+        productQuantity : item.quantity,
+        expectedDelivery : item.expectedDelivery,
+      }
     })
     await createCODsession(userId,createTime);
     const orderId = await insertCODOrderDetails(userId,createTime,cartTotal);
     await deleteFromCart(userId);
     await insertCODOrderItems(cartList,orderId,createTime);
+    await updateInventoryOnInventoryServer(productList);
+    await addCODOrder(productList,shippingAddress);
     res.status(200).json({msg:'order done'});
   }
   catch(err){
@@ -334,4 +360,24 @@ const updateInventoryOnInventoryServer = async (productList) => {
     res.status(500).json({msg: err.message})
   }
 };
+
+const addCODOrder = async(productList,shippingAddress)=>{
+  try{
+    const res = await axios.post('http://localhost:3002/inventory/addOrder');
+    console.log(res);
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+const addOrder = async(productList,shippingAddress)=>{
+  try{
+    console.log(shippingAddress);
+    const res = await axios.post('http://localhost:3002/inventory/addOrder');
+    console.log(res);
+  }
+  catch(err){
+    console.log(err);
+  }
+}
 export default router;

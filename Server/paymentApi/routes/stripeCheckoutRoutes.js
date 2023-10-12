@@ -95,19 +95,6 @@ router.post("/create-checkout-session", async(req, res) => {
     customer:customer.id,
     success_url: `${process.env.CLIENT_URL}/checkout-success`,
     cancel_url: `${process.env.CLIENT_URL}/`,
-    shipping_address_collection: {
-      allowed_countries: ["US", "IN"], // Specify the allowed countries for shipping
-      phone: shippingAddress.phone, // Include phone number
-      address: {
-        city: shippingAddress.city,
-        country: shippingAddress.country,
-        line1: shippingAddress.address_line1,
-        line2: shippingAddress.address_line2,
-        postal_code: shippingAddress.postal_code,
-        state: shippingAddress.state,
-      },
-      name: shippingAddress.full_name, // Include name
-    },
   });
   console.log(session);
   createPaymentEvent(session.id,customer);
@@ -336,7 +323,7 @@ const insertCODOrderItems = async (cartList, orderId, createTime) => {
 };
 
 
-const updateInventoryOnInventoryServer = async (productList) => {
+const updateInventoryOnInventoryServer = async(productList) => {
   try {
     const inventoryServerURL = 'http://localhost:3002/inventory/updateInventory';
     const productPromises =  productList.map(async(item) => {
@@ -349,7 +336,8 @@ const updateInventoryOnInventoryServer = async (productList) => {
         return res;
       } 
       catch(err){
-        res.status(500).json({msg: err.message})
+        console.log(err);
+        throw err;
       }  
 
     })
@@ -357,13 +345,13 @@ const updateInventoryOnInventoryServer = async (productList) => {
     console.log(res);
   } catch (error) {
     console.error('Error updating inventory:', error);
-    res.status(500).json({msg: err.message})
+    throw error;
   }
 };
 
 const addCODOrder = async(productList,shippingAddress)=>{
   try{
-    const res = await axios.post('http://localhost:3002/inventory/addOrder');
+    const res = await axios.post('http://localhost:3002/order/addOrder',{productList,shippingAddress});
     console.log(res);
   }
   catch(err){
@@ -373,7 +361,10 @@ const addCODOrder = async(productList,shippingAddress)=>{
 const addOrder = async(productList,shippingAddress)=>{
   try{
     console.log(shippingAddress);
-    const res = await axios.post('http://localhost:3002/inventory/addOrder');
+    const shippingAddress = {
+      
+    }
+    const res = await axios.post('http://localhost:3002/order/addOrder',{productList,shippingAddress});
     console.log(res);
   }
   catch(err){

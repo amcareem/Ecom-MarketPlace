@@ -76,7 +76,7 @@ router.get('/getDefaultAddress/:id', async(req,res) =>{
                 console.log(err);
             }
             else{
-                res.status(200).send({defaultAddress : address});
+                res.status(200).send({defaultAddress : address[0]});
             }
         })
     }

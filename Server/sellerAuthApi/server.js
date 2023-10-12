@@ -6,6 +6,7 @@ var AppError = require("./utils/appError");
 var userRouter = require("./routes/userRouters");
 var inventoryRouter = require("./routes/inventoryRouters");
 var onboardRouter = require("./routes/onBoard");
+var orderRouter = require("./routes/orderRouters")
 var cors = require('cors');
 var app = express();
 
@@ -15,12 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: '*' }));
 
 app.use("/auth", userRouter);
 app.use("/inventory", inventoryRouter);
 app.use("/onboard", onboardRouter);
-
+app.use("/order",orderRouter);
 //Error handling
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find the route ${req.url} on this server`, 404));

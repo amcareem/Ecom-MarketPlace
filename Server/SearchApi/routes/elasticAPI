@@ -9,188 +9,188 @@ const { Client } = require('@elastic/elasticsearch')
         cloud: { id: '3409d760e3e6423c80978f29a625b55d:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDU1MzU5MGRjZDZkZjQ2MzdiNTMxNmI2N2M1ZDE3N2RjJDg2NWI2NTEyYjA3NTRkYTE4ZTliNzUzMmU2Zjc0OTg3' },
         auth: { apiKey:  'NDc1Zkhvc0JoUTV5a3luSzM0aGs6ZW9aNlR2Mi1SbC1Vd0MwZTJDa2tPQQ=='}
       })
-  //     async function run (req,res,next) {
-  //       console.log(req.body);
-  //       try{
-  //         await client.index({
-  //           index: 'shop-details',
-  //           document: {
-  //             shopId : req.body.id,
-  //             storeName : req.body.shopName,
-  //             type : req.body.shopType,
-  //             Time : '5:00 pm - 11:00 Pm '
-  //           }
-  //         })
-  //         await client.indices.refresh({ index: 'shop-details' })
-  //       res.status(201).json({msg:'registered'})
-  //       }catch (error) {
-  //       res.send(error);
-  //       next();
-  //   }
-  // }
-      async function run () {
-        // 
-        await client.index({
+      async function run (req,res,next) {
+        console.log(req.body);
+        try{
+          await client.index({
             index: 'shop-details',
             document: {
-              shopId : '99',
-              storeName : 'Swarup Biriyani',
-              type : 'Food',
+              shopId : req.body.id,
+              storeName : req.body.shopName,
+              type : req.body.shopType,
               Time : '5:00 pm - 11:00 Pm '
             }
           })
+          await client.indices.refresh({ index: 'shop-details' })
+        res.status(201).json({msg:'registered'})
+        }catch (error) {
+        res.send(error);
+        next();
+    }
+  }
+  //     async function run () {
+  //       // 
+  //       await client.index({
+  //           index: 'shop-details',
+  //           document: {
+  //             shopId : '99',
+  //             storeName : 'Swarup Biriyani',
+  //             type : 'Food',
+  //             Time : '5:00 pm - 11:00 Pm '
+  //           }
+  //         })
         
         
-        await client.index({
-          index: 'shop-details',
-          document: {
-            shopId : '98',
-            storeName : 'Swarup Sports',
-            type : 'Sports Good',
-            Time : '9:00 Am - 8:00 Pm '
-          }
-        })
+  //       await client.index({
+  //         index: 'shop-details',
+  //         document: {
+  //           shopId : '98',
+  //           storeName : 'Swarup Sports',
+  //           type : 'Sports Good',
+  //           Time : '9:00 Am - 8:00 Pm '
+  //         }
+  //       })
       
-        await client.index({
-          index: 'shop-details',
-          document: {
-            shopId : '97',
-            storeName : 'Munna General Store',
-            type : 'Grocery',
-            Time : '10:00 Am - 8:00 Pm '
-          }
-        })
+  //       await client.index({
+  //         index: 'shop-details',
+  //         document: {
+  //           shopId : '97',
+  //           storeName : 'Munna General Store',
+  //           type : 'Grocery',
+  //           Time : '10:00 Am - 8:00 Pm '
+  //         }
+  //       })
         
-        await client.index({
-          index: 'shop-details',
-          document: {
-            shopId : '96',
-            storeName : 'Kokonod Vege Shop',
-            type : 'WholeSale Veg',
-            Time : '6:00 Am - 12:00 Pm '
-          }
-        })
+  //       await client.index({
+  //         index: 'shop-details',
+  //         document: {
+  //           shopId : '96',
+  //           storeName : 'Kokonod Vege Shop',
+  //           type : 'WholeSale Veg',
+  //           Time : '6:00 Am - 12:00 Pm '
+  //         }
+  //       })
       
-        await client.index({
-          index: 'shop-details',
-          document: {
-            shopId : '95',
-            storeName : 'Souvik Biriyani',
-            type : 'Food',
-            Time : '5:00 pm - 11:00 Pm '
-          }
-        })
-        await client.index({
-            index: 'shop-details',
-            document: {
-              shopId : '94',
-              storeName : 'Swaruper Enterprice',
-              type : 'HardWare',
-              Time : '10:00 Am - 8:00 Pm '
-            }
-          })
+  //       await client.index({
+  //         index: 'shop-details',
+  //         document: {
+  //           shopId : '95',
+  //           storeName : 'Souvik Biriyani',
+  //           type : 'Food',
+  //           Time : '5:00 pm - 11:00 Pm '
+  //         }
+  //       })
+  //       await client.index({
+  //           index: 'shop-details',
+  //           document: {
+  //             shopId : '94',
+  //             storeName : 'Swaruper Enterprice',
+  //             type : 'HardWare',
+  //             Time : '10:00 Am - 8:00 Pm '
+  //           }
+  //         })
          
-            await client.index({
-                index: 'shop-details',
-                document: {
-                shopId : '93',
-                storeName : 'mayalaxmi store',
-                type : 'HardWare',
-                Time : '10:00 Am - 8:00 Pm '
-                }
-            })
-            await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '92',
-                  storeName : 'loknath snacks',
-                  type : 'snacks and beverages',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '91',
-                  storeName : 'arko publishers',
-                  type : 'paperwork',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '90',
-                  storeName : 'dutta brothers',
-                  type : 'stationary',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '89',
-                  storeName : 'manasha bastralay',
-                  type : 'clothing',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '88',
-                  storeName : 'happy electronics',
-                  type : 'Electronics',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '87',
-                  storeName : 'jagannath house',
-                  type : 'mudikhana',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '86',
-                  storeName : 'Pangopal sweet',
-                  type : 'sweet',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
-              await client.index({
-                index: 'shop-details',
-                document: {
-                  shopId : '64d26ced56d9dd620fa75b1b',
-                  storeName : 'great shop2',
-                  type : 'shoes',
-                  Time : '10:00 Am - 8:00 Pm '
-                }
-              })
+  //           await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //               shopId : '93',
+  //               storeName : 'mayalaxmi store',
+  //               type : 'HardWare',
+  //               Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //           })
+  //           await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '92',
+  //                 storeName : 'loknath snacks',
+  //                 type : 'snacks and beverages',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '91',
+  //                 storeName : 'arko publishers',
+  //                 type : 'paperwork',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '90',
+  //                 storeName : 'dutta brothers',
+  //                 type : 'stationary',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '89',
+  //                 storeName : 'manasha bastralay',
+  //                 type : 'clothing',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '88',
+  //                 storeName : 'happy electronics',
+  //                 type : 'Electronics',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '87',
+  //                 storeName : 'jagannath house',
+  //                 type : 'mudikhana',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '86',
+  //                 storeName : 'Pangopal sweet',
+  //                 type : 'sweet',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
+  //             await client.index({
+  //               index: 'shop-details',
+  //               document: {
+  //                 shopId : '64d26ced56d9dd620fa75b1b',
+  //                 storeName : 'great shop2',
+  //                 type : 'shoes',
+  //                 Time : '10:00 Am - 8:00 Pm '
+  //               }
+  //             })
               
               
             
 
-    await client.indices.refresh({ index: 'shop-details' })
+  //   await client.indices.refresh({ index: 'shop-details' })
 
-    // Let's search!
-    const result= await client.search({
-      index: 'shop-details',
-      query: {
-        match_phrase_prefix: {
-            storeName: 'Swarup Biriyani'
-        }
-      }
-    })
+  //   // Let's search!
+  //   const result= await client.search({
+  //     index: 'shop-details',
+  //     query: {
+  //       match_phrase_prefix: {
+  //           storeName: 'Swarup Biriyani'
+  //       }
+  //     }
+  //   })
   
-    console.log(result.hits.hits)
-  }
+  //   console.log(result.hits.hits)
+  // }
   
-  run().catch(console.log)
+  // run().catch(console.log)
 async function run1 (req,res,next) {
 
   console.log('KJRiPJjvSs2OyxjK2LsBRw');
@@ -258,67 +258,67 @@ async function run1 (req,res,next) {
  }
 
 
-// async function storeProducts (req,res,next) {
-//   console.log(req.body);
-//   try{
-//     await client.index({
-//       index: 'product-details',
-//       document: {
-//         productId : req.body.id,
-//         productName : req.body.productName,
-//         brand: req.body.brand,
-//         color: req.body.color,
-//       }
-//     })
-//     await client.indices.refresh({ index: 'shop-details' })
-//   res.status(201).json({msg:'registered'})
-//   }catch (error) {
-//   res.send(error);
-//   next();
-// }
-// }
-async function storeProducts () {
-      // 
-      await client.index({
-          index: 'product-details',
-          document: {
-            productId : '64d9cbbbda383a075bc36c58',
-            productName : "nike airmax",
-            brand : 'Nike',
-            color : 'red'
-          }
-        })
-  
-  
-      await client.index({
-        index: 'product-details',
-        document: {
-          productId : '64e89a982f2a038066801069',
-          productName : "nike bigtime ",
-          brand : 'nike',
-          color: 'red'
-        }
-      })
-
-  
-
-
-  await client.indices.refresh({ index: 'product-details' })
-
-  // Let's search!
-  const result= await client.search({
-    index: 'product-details',
-    query: {
-      match_phrase_prefix: {
-          productName: 'nike airmax'
+async function storeProducts (req,res,next) {
+  console.log(req.body);
+  try{
+    await client.index({
+      index: 'product-details',
+      document: {
+        productId : req.body.id,
+        productName : req.body.productName,
+        brand: req.body.brand,
+        color: req.body.color,
       }
-    }
-  })
-
-  console.log(result.hits.hits)
+    })
+    await client.indices.refresh({ index: 'shop-details' })
+  res.status(201).json({msg:'registered'})
+  }catch (error) {
+  res.send(error);
+  next();
 }
+}
+// async function storeProducts () {
+//       // 
+//       await client.index({
+//           index: 'product-details',
+//           document: {
+//             productId : '64d9cbbbda383a075bc36c58',
+//             productName : "nike airmax",
+//             brand : 'Nike',
+//             color : 'red'
+//           }
+//         })
+  
+  
+//       await client.index({
+//         index: 'product-details',
+//         document: {
+//           productId : '64e89a982f2a038066801069',
+//           productName : "nike bigtime ",
+//           brand : 'nike',
+//           color: 'red'
+//         }
+//       })
 
-storeProducts().catch(console.log)
+  
+
+
+//   await client.indices.refresh({ index: 'product-details' })
+
+//   // Let's search!
+//   const result= await client.search({
+//     index: 'product-details',
+//     query: {
+//       match_phrase_prefix: {
+//           productName: 'nike airmax'
+//       }
+//     }
+//   })
+
+//   console.log(result.hits.hits)
+// }
+
+// storeProducts().catch(console.log)
 
  async function productSearch(req,res,next) {
 
@@ -371,9 +371,9 @@ router.get('/getAll',run2,(req,res)=>{
     console.log("hello");
     
 })
-// router.post('/searchProduct',productSearch,(req, res) =>{
-//   console.log("response sent")
+router.post('/searchProduct',productSearch,(req, res) =>{
+  console.log("response sent")
   
-// });
+});
 router.post('registerShop',run);
 module.exports = router;

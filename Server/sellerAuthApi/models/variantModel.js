@@ -19,11 +19,9 @@ const variantSchema = new Schema({
     },
     variantName:{
         type: String,
-        required: true
     },
     variantType:{
         type: String,
-        required: true
     },
     productDescription:{
         type : String,
@@ -86,10 +84,14 @@ const variantSchema = new Schema({
         type:String,
         default:'variant'
     },
-    variantImage:{
+    mainImage:{
         data:Buffer,
         contentType:String,
     },
+    productImages:[{
+        data:Buffer,
+        contentType:String
+    }],
     size:{
         type:String
     }

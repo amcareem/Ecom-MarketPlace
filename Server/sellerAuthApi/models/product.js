@@ -24,7 +24,7 @@ var productSchema = new Schema({
     variantType:{
         type: String,
     },
-    productImage:[{
+    productImages:[{
         data:Buffer,
         contentType:String
     }],
@@ -91,7 +91,22 @@ var productSchema = new Schema({
     },
     size:{
         type:String,
-    }
+    },
+    variant:[{
+        variantId:{
+            type:String,
+            required:true
+        },
+        variantType:{
+            type:String,
+        },
+        variantName:{
+            type:String,
+        },
+        size:{
+            type:String,
+        }
+    }]
 });
 
 var productModel =  mongoose.model('productModel',productSchema);

@@ -36,11 +36,8 @@ const upload = multer({
   storage: Storage,
 }).fields([
   {name: 'mainImage', maxCount: 1 },
-  {name: 'productImages', maxCount:5},
+  {name: 'productImages', maxCount:8},
 ]);
-const variantUpload = multer({
-  storage: Storage,
-}).single('variantImage');
 
 router.post('/storeProduct',(req,res)=>{
   //store data in the database
@@ -60,7 +57,7 @@ router.post('/storeProduct',(req,res)=>{
         const productImages = req.files.productImages.map((file) => ({
             data: file.filename,
             contentType: file.mimetype,
-          }));
+        }));
 
 
       const newProduct =  new productModel({
@@ -72,7 +69,7 @@ router.post('/storeProduct',(req,res)=>{
         brand: req.body.brand,
         gender: req.body.gender,
         mainImage: mainImageData,
-        productImage: productImages,
+        productImages: productImages,
         productPrice:req.body.productPrice,
         variantType:req.body.variantType,
         variantName: req.body.variantName,
@@ -100,19 +97,23 @@ router.post('/storeProduct',(req,res)=>{
 
 router.post('/storeProductVariant',(req,res)=>{
   //store data in the database
-  variantUpload(req,res,(err)=>{
+  upload(req,res,(err)=>{
     if(err){
       res.send(err);
     }
     else{
       console.log(req.body) 
       console.log(req.file)
-      const variantImage = req.file;
-        const variantImageData = {
-          data: variantImage.filename,
-          contentType: variantImage.mimetype,
+      const mainImage = req.files.mainImage[0];
+        const mainImageData = {
+          data: mainImage.filename,
+          contentType: mainImage.mimetype,
         };
 
+        const productImages = req.files.productImages.map((file) => ({
+            data: file.filename,
+            contentType: file.mimetype,
+        }));
 
 
       const newProduct =  new variantModel({
@@ -127,12 +128,24 @@ router.post('/storeProductVariant',(req,res)=>{
         brand: req.body.brand,
         gender: req.body.gender,
         productPrice:req.body.productPrice,
-        variantImage: variantImageData,
+        mainImage: mainImageData,
+        productImages: productImages,
         size: req.body.size
       });
       try {
-        newProduct.save().then(async()=>{
+        newProduct.save().then(async(savedProduct)=>{
           console.log("saved");
+          const newVariant = {
+            variantId: savedProduct._id,
+            variantType: req.body.variantType,
+            variantName: req.body.variantName,
+            size : req.body.size
+          };
+          await productModel.findByIdAndUpdate(
+            savedProduct.productId, 
+            { $push: { variant: newVariant } }
+          );
+          console.log("variant array updated");
           const inventoryItem = new inventoryModel({
             productId: savedProduct._id,
             shopId: savedProduct.shopId,
@@ -155,7 +168,7 @@ router.get("/getProduct/:shopId", async (req, res) => {
     const result = await productModel.find({ shopId: req.params.shopId });
     var productArray = [];
     result.forEach((element) => {
-      const productImages = element.productImage.map((image) => ({
+      const productImages = element.productImages.map((image) => ({
         imagePath: path.join('..', 'assets', `${shopId}`, image.data.toString())
       }));
       const items = {
@@ -170,7 +183,7 @@ router.get("/getProduct/:shopId", async (req, res) => {
         brand: element.brand,
         size : element.size,
         gender: element.gender,
-        productImage: productImages,
+        productImages: productImages,
         isAvailable: element.isAvailable,
         mainImagePath : path.join('..','assets',`${shopId}`,element.mainImage.data.toString()),
       };
@@ -179,6 +192,7 @@ router.get("/getProduct/:shopId", async (req, res) => {
 
     res.status(201).send(productArray);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });
@@ -188,7 +202,7 @@ router.get("/getProductInfo/:productId",async(req,res) =>{
     const productId = req.params.productId;
     const result = await productModel.findOne({_id:productId});
     console.log(result);
-    const productImages = result.productImage.map((image) => ({
+    const productImages = result.productImages.map((image) => ({
       imagePath: path.join('..', 'assets', `${result.shopId}`, image.data.toString())
     }));
     const item = {
@@ -205,7 +219,7 @@ router.get("/getProductInfo/:productId",async(req,res) =>{
       variantType : result.variantType,
       size : result.size,
       gender: result.gender,
-      productImage: productImages,
+      productImages: productImages,
       isAvailable: result.isAvailable,
       mainImagePath : path.join('..','assets',`${result.shopId}`,result.mainImage.data.toString()),
   }
@@ -217,42 +231,48 @@ router.get("/getProductInfo/:productId",async(req,res) =>{
   }
 })
 
-router.get("/getProductVariantInfo/:productId",async(req,res) =>{
-  try{
-    const productId = req.params.productId;
-    const result = await variantModel.findOne({_id:productId});
-    console.log(result);
-    const item = {
-      shopId : element.shopId,
-        shopName : element.shopName,
-        productId: element._id,
-        productName: element.productName,
-        variantType:element.variantType,
-        variantName:element.variantName,
-        productDescription: element.productDescription,
-        productPrice: element.productPrice,
-        expectedDelivery: element.expectedDelivery,
-        brand: element.brand,
-        color: element.color,
-        size: element.size,
-        gender: element.gender,
-        isAvailable: element.isAvailable,
-        variantImagePath : path.join('..','assets',`${element.shopId}`,element.variantImage.data.toString()),
+router.get("/getProductVariantInfo/:productId", async (req, res) => {
+  try {
+      const productId = req.params.productId;
+      const variantName = req.query.variantName;
+      const result = await variantModel.findOne({ productId: productId, variantName: variantName });
+
+      if (result) {
+          const productImages = result.productImages.map((image) => ({
+              imagePath: path.join('..', 'assets', result.shopId, image.data.toString())
+          }));
+          const item = {
+              shopId: result.shopId,
+              shopName: result.shopName,
+              productId: result._id,
+              productName: result.productName,
+              variantType: result.variantType,
+              variantName: result.variantName,
+              productDescription: result.productDescription,
+              productPrice: result.productPrice,
+              expectedDelivery: result.expectedDelivery,
+              brand: result.brand,
+              size: result.size,
+              gender: result.gender,
+              isAvailable: result.isAvailable,
+              productImages: productImages,
+              mainImagePath: path.join('..', 'assets', result.shopId, result.mainImage.data.toString()),
+          };
+          res.status(200).json({ item });
+      } else {
+          res.status(404).json({ message: 'No matching product found' });
+      }
+  } catch (err) {
+      res.status(500).json({ err: err.message });
   }
-  console.log(item);
-  res.status(200).json({item})
-}
-  catch(err){
-    res.status(500).json({err:err.message})
-  }
-})
+});
 
 router.get("/showProduct/:productId",async(req,res)=>{
   try{
     const productId = req.params.productId;
     const productInfo = await productModel.findOne({_id:productId});
     console.log(productInfo);
-    const productImages = productInfo.productImage.map((image) => ({
+    const productImages = productInfo.productImages.map((image) => ({
       imagePath: path.join('..', 'assets', `${productInfo.shopId}`, image.data.toString())
     }));
     const item = {
@@ -269,47 +289,32 @@ router.get("/showProduct/:productId",async(req,res)=>{
       brand: productInfo.brand,
       size: productInfo.size,
       gender: productInfo.gender,
-      productImage: productImages,
+      productImages: productImages,
       isAvailable: productInfo.isAvailable,
       mainImagePath : path.join('..','assets',`${productInfo.shopId}`,productInfo.mainImage.data.toString()),
   }
-    console.log(item);
-    const variants = await variantModel.find({productId:productId});
+    const variants = productInfo.variant;
     const variantMap = new Map();
-    variants.forEach((element) => {
-      const variant = {
-        shopId : element.shopId,
-        shopName : element.shopName,
-        productId: element._id,
-        productName: element.productName,
-        variantType:element.variantType,
-        variantName:element.variantName,
-        productDescription: element.productDescription,
-        productPrice: element.productPrice,
-        expectedDelivery: element.expectedDelivery,
-        brand: element.brand,
-        color: element.color,
-        size: element.size,
-        gender: element.gender,
-        isAvailable: element.isAvailable,
-        mainImagePath : path.join('..','assets',`${element.shopId}`,element.variantImage.data.toString()),
-      };
+    variants.forEach((element)=>{
       if(!variantMap.has(element.variantType)){
         variantMap.set(element.variantType,[]);
       }
       const variantArray = variantMap.get(element.variantType);
       const index = variantArray.findIndex((item) => item.variantName === element.variantName);
-
+  
       if (index === -1) {
         variantArray.push({
           variantName: element.variantName,
-          variantArray: [variant],
+          variantArray: [element],
         });
       } else {
-        variantArray[index].variantArray.push(variant);
+        variantArray[index].variantArray.push(element);
       }
-    });
-    const variantObject = Object.fromEntries(variantMap);
+    })
+    
+  const variantObject = Object.fromEntries(variantMap);
+    
+    
     res.status(200).json({item,variantObject});
   }
   catch(err){
@@ -321,3 +326,39 @@ router.get("/", (req, res) => {
   res.send("API is working");
 });
 module.exports = router;
+// const variants = await variantModel.find({productId:productId});
+//     const variantMap = new Map();
+// variants.forEach((element) => {
+//   const variant = {
+//     shopId : element.shopId,
+//     shopName : element.shopName,
+//     productId: element._id,
+//     productName: element.productName,
+//     variantType:element.variantType,
+//     variantName:element.variantName,
+//     productDescription: element.productDescription,
+//     productPrice: element.productPrice,
+//     expectedDelivery: element.expectedDelivery,
+//     brand: element.brand,
+//     color: element.color,
+//     size: element.size,
+//     gender: element.gender,
+//     isAvailable: element.isAvailable,
+//     mainImagePath : path.join('..','assets',`${element.shopId}`,element.variantImage.data.toString()),
+//   };
+//   if(!variantMap.has(element.variantType)){
+//     variantMap.set(element.variantType,[]);
+//   }
+//   const variantArray = variantMap.get(element.variantType);
+//   const index = variantArray.findIndex((item) => item.variantName === element.variantName);
+
+//   if (index === -1) {
+//     variantArray.push({
+//       variantName: element.variantName,
+//       variantArray: [variant],
+//     });
+//   } else {
+//     variantArray[index].variantArray.push(variant);
+//   }
+// });
+// const variantObject = Object.fromEntries(variantMap);

@@ -235,7 +235,13 @@ router.get("/getProductVariantInfo/:productId", async (req, res) => {
   try {
       const productId = req.params.productId;
       const variantName = req.query.variantName;
-      const result = await variantModel.findOne({ productId: productId, variantName: variantName });
+      const size = req.query.size;
+      console.log(size);
+      let result;
+      if(size){
+        result = await variantModel.findOne({ productId: productId, variantName: variantName,size: size});
+      }
+      else result = await variantModel.findOne({ productId: productId, variantName: variantName });
 
       if (result) {
           const productImages = result.productImages.map((image) => ({

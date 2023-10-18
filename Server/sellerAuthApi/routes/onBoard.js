@@ -185,6 +185,7 @@ router.get("/getProduct/:shopId", async (req, res) => {
         gender: element.gender,
         productImages: productImages,
         isAvailable: element.isAvailable,
+        productType:element.productType,
         mainImagePath : path.join('..','assets',`${shopId}`,element.mainImage.data.toString()),
       };
       productArray.push(items);
@@ -200,7 +201,11 @@ router.get("/getProduct/:shopId", async (req, res) => {
 router.get("/getProductInfo/:productId",async(req,res) =>{
   try{
     const productId = req.params.productId;
-    const result = await productModel.findOne({_id:productId});
+    let result;
+    result = await productModel.findOne({_id:productId});
+    if(!result){
+      result  = await variantModel.findOne({_id:productId});
+    }
     console.log(result);
     const productImages = result.productImages.map((image) => ({
       imagePath: path.join('..', 'assets', `${result.shopId}`, image.data.toString())
@@ -231,17 +236,12 @@ router.get("/getProductInfo/:productId",async(req,res) =>{
   }
 })
 
-router.get("/getProductVariantInfo/:productId", async (req, res) => {
+router.get("/getVariantInfo/:variantId", async (req, res) => {
   try {
-      const productId = req.params.productId;
-      const variantName = req.query.variantName;
-      const size = req.query.size;
-      console.log(size);
+      const variantId = req.params.variantId;
       let result;
-      if(size){
-        result = await variantModel.findOne({ productId: productId, variantName: variantName,size: size});
-      }
-      else result = await variantModel.findOne({ productId: productId, variantName: variantName });
+     
+      result = await variantModel.findOne({ _id:variantId});
 
       if (result) {
           const productImages = result.productImages.map((image) => ({
@@ -270,6 +270,45 @@ router.get("/getProductVariantInfo/:productId", async (req, res) => {
       }
   } catch (err) {
       res.status(500).json({ err: err.message });
+  }
+});
+
+router.get("/getProductVariantInfo/:productId", async (req, res) => {
+  try {
+      const productId = req.params.productId;
+      const variantName = req.query.variantName;
+      let result;
+      result = await variantModel.findOne({ productId: productId, variantName: variantName });
+
+      if (result) {
+          const productImages = result.productImages.map((image) => ({
+              imagePath: path.join('..', 'assets', result.shopId, image.data.toString())
+          }));
+          const item = {
+              shopId: result.shopId,
+              shopName: result.shopName,
+              productId: result._id,
+              productName: result.productName,
+              variantType: result.variantType,
+              variantName: result.variantName,
+              productDescription: result.productDescription,
+              productPrice: result.productPrice,
+              expectedDelivery: result.expectedDelivery,
+              brand: result.brand,
+              size: result.size,
+              gender: result.gender,
+              isAvailable: result.isAvailable,
+              productImages: productImages,
+              productType: result.productType,
+              mainImagePath: path.join('..', 'assets', result.shopId, result.mainImage.data.toString()),
+          };
+          res.status(200).json({ item });
+      } else {
+          res.status(404).json({ message: 'No matching product found' });
+      }
+  } catch (err) {
+      res.status(500).json({ err: err.message });
+      console.log(err);
   }
 });
 

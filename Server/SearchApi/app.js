@@ -9,7 +9,7 @@ var elasticRouter =  require('./routes/elasticAPI');
 
 var app = express();
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: '*' }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

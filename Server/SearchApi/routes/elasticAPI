@@ -15,10 +15,10 @@ const { Client } = require('@elastic/elasticsearch')
           await client.index({
             index: 'shop-details',
             document: {
-              shopId : req.body.id,
+              shopId : req.body.shopId,
               storeName : req.body.shopName,
               type : req.body.shopType,
-              Time : '5:00 pm - 11:00 Pm '
+              shopImage: req.body.shopImage
             }
           })
           await client.indices.refresh({ index: 'shop-details' })
@@ -168,7 +168,6 @@ const { Client } = require('@elastic/elasticsearch')
   //                 shopId : '64d26ced56d9dd620fa75b1b',
   //                 storeName : 'great shop2',
   //                 type : 'shoes',
-  //                 Time : '10:00 Am - 8:00 Pm '
   //               }
   //             })
               
@@ -375,5 +374,5 @@ router.post('/searchProduct',productSearch,(req, res) =>{
   console.log("response sent")
   
 });
-router.post('registerShop',run);
+router.post('/registerShop',run);
 module.exports = router;

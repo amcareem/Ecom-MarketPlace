@@ -9,6 +9,7 @@ const path = require("path");
 //const connect =  require('../utils/dbConnection');
 const mongoose = require("mongoose");
 const { decode } = require("punycode");
+const axios = require('axios');
 mongoose
   .connect(
     process.env.MONGO_URL,
@@ -73,12 +74,20 @@ exports.signup = async (req, res, next) => {
         });
     
         const token = singToken(newUser._id);
+        const shopData = {
+          shopId: newUser._id,
+          shopName: newUser.shopName,
+          shopType: newUser.shopType,
+          shopImage: newUser.shopImage
+        }
+        const elasticRegister = await registerShop(shopData);
         res.status(200).json({
           JWToken: token,
           status: "success",
           data: {
             user: newUser,
           },
+          elasticRegister
         });
       }
     })
@@ -87,7 +96,15 @@ exports.signup = async (req, res, next) => {
     next(err);
   }
 };
-
+const registerShop = async(shopdata) =>{
+    try{
+      const res = await axios.post('http://localhost:4000/api/registerShop',shopdata);
+      return res.data.msg;
+    }
+    catch(err){
+      console.log(err);
+    }
+}
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;

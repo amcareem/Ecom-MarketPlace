@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "concurrently": "^8.2.2",
     "nodemon": "^2.0.22"
+  },
+  "scripts": {
+    "start": "concurrently \"cd Server/paymentApi && node server.js\" \"cd Server/authApi && node server.js\" \"cd Server/SearchApi && node app.js\" \"cd Server/sellerAuthApi && node sellerAuthApi.js\""
   }
 }

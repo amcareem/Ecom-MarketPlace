@@ -1,7 +1,15 @@
+-- Use the intended database
 use mydb;
-select * from cart;
-delete from cart where shopId = 99;
-SET SQL_SAFE_UPDATES = 0;
+
+-- Drop existing tables if they exist
+drop table if exists user_payment_event;
+drop table if exists payment_details;
+drop table if exists order_details;
+drop table if exists user_address;
+drop table if exists user;
+drop table if exists cart;
+
+-- Create the 'cart' table
 CREATE TABLE cart (
     productId varchar(100) NOT NULL,
     uuid VARCHAR(100) NOT NULL,
@@ -12,9 +20,10 @@ CREATE TABLE cart (
     quantity INT NOT NULL,
     PRIMARY KEY (productId, uuid)
 );
-drop table user
+
+-- Create the 'user' table
 CREATE TABLE user (
-    user_id varchar(255) NOT NULL,
+    user_id varchar(100) NOT NULL,
     user_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -22,10 +31,11 @@ CREATE TABLE user (
     PRIMARY KEY (user_id)
 );
 
+-- Create the 'user_address' table
 create table user_address(
-	id varchar(255) NOT NULL,
+	id varchar(100) NOT NULL,
     full_name varchar(100) NOT NULL,
-	user_id varchar(255) NOT NULL,
+	user_id varchar(100) NOT NULL,
     address_line1 VARCHAR(255) NOT NULL,
     address_line2 VARCHAR(255) NOT NULL,
     city VARCHAR(50) NOT NULL,
@@ -36,55 +46,44 @@ create table user_address(
     is_default BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY (id),
     foreign key (user_id) references user (user_id) on delete cascade on update cascade
-)
-select * from user_address;
-SELECT is_default FROM user_address WHERE id = '38be6f61-7d17-4e98-bd3b-ca2ec533e4dc';
-delete from user_address where id = '5c3894b6-5015-4ddf-8846-7b927ef3da91'
-UPDATE user_address SET is_default = true ORDER BY id LIMIT 1;
-delete from cart where productId = '64d3b6f1704a7e20689dc7c6'
-SELECT is_default FROM user_address WHERE id = '1ae4bc24-6187-43c6-b057-3245d685e10a';
+);
 
-create table user_payment_event(
-	checkout_id varchar(250),
-    user_id varchar(250),
-    order_id varchar(250),
-    provider varchar(50),
-    seller_id VARCHAR(250),
-    payment_status VARCHAR(20),
-	created_at varchar(100),
-    modified_at varchar(100),
-    primary key (checkout_id),
-    foreign key (user_id) references user(user_id) on delete cascade on update cascade
-    foreign key (order_id) references order_details(order_id) on delete cascade on update cascade
-)
-select * from user_payment_event;
-drop table user_payment_event;
-
-create table payment_details(
-	payment_id varchar(250),
-    amount varchar(20),
-    currency varchar(20),
-    checkout_id varchar(250),
-    payment_status varchar(20),
-    created_at varchar(100),
-    modified_at varchar(100),
-    primary key (payment_id),
-    foreign key (checkout_id) references user_payment_event(checkout_id) on delete cascade on update cascade,
-    
-)
-drop table payment_details;
-select table payment_details;
-
+-- Create the 'order_details' table
 create table order_details(
-	id varchar(250),
-    user_id varchar(250),
-    payment_id varchar(250),
+	id varchar(100),
+    user_id varchar(100),
+    payment_id varchar(100),
     total varchar(20),
     created_at varchar(100),
     modified_at varchar(100),
     primary key (id),
+    foreign key (user_id) references user(user_id) on delete cascade on update cascade
+);
+
+-- Create the 'user_payment_event' table
+create table user_payment_event(
+	checkout_id varchar(100),
+    user_id varchar(100),
+    order_id varchar(100),
+    provider varchar(50),
+    seller_id VARCHAR(100),
+    payment_status VARCHAR(20),
+	created_at varchar(100),
+    modified_at varchar(100),
+    primary key (checkout_id),
     foreign key (user_id) references user(user_id) on delete cascade on update cascade,
-    foreign key (payment_id) references payment_details(payment_id) on delete cascade on update cascade
-)
-select * from payment_details;
-drop table payment_details;
+    foreign key (order_id) references order_details(id) on delete cascade on update cascade
+);
+
+-- Create the 'payment_details' table
+create table payment_details(
+	payment_id varchar(100),
+    amount varchar(20),
+    currency varchar(20),
+    checkout_id varchar(100),
+    payment_status varchar(20),
+    created_at varchar(100),
+    modified_at varchar(100),
+    primary key (payment_id),
+    foreign key (checkout_id) references user_payment_event(checkout_id) on delete cascade on update cascade
+);
